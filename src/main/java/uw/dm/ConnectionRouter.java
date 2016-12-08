@@ -88,8 +88,13 @@ public class ConnectionRouter {
 	/**
 	 * 根据提供的table信息来获得映射连接。
 	 * 
+<<<<<<< HEAD
 	 * @param table 表名
 	 * @param access 方法all/write/read
+=======
+	 * @param 表名
+	 * @param 方法all/write/read
+>>>>>>> refs/remotes/github/master
 	 * @return 连接名
 	 */
 	private static String map(String table, String access) {
