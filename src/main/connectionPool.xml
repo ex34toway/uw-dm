@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 数据库连接池配置 -->
+<config>
+	<!-- 全局设定，通过全局设定的项目将会成为连接池设定的默认值。
+		全局设定中的all标签设定的是最基本的项目，
+		将会覆盖mysql/oracle标签中未设定项目。
+		根据pool.dbType标签中的设定，来覆盖pool中未设定的项目。
+	 -->
+	<global>
+		<all>
+			<!-- 打开连接池设定，true/false,默认为true -->
+			<enablePool>true</enablePool>
+			<!-- 打开日志支持 ，true/false,默认为false-->
+			<enableLog>false</enableLog>
+			<!-- 当低峰的时候，回收连接到最小连接，默认为true  -->
+			<keepMinConn>true</keepMinConn>
+			<!-- 数据库驱动 -->
+			<driver>true</driver>
+			<!-- 测试sql，用于测试连接是否可用 -->
+			<testSQL></testSQL>
+			<!-- 最小连接数 -->
+			<minConns>1</minConns>
+			<!-- 最大连接数 -->
+			<maxConns>5</maxConns>			
+			<!-- 连接闲时超时秒数，默认值为60s-->
+			<connIdleTimeout>60</connIdleTimeout>
+			<!-- 连接忙时超时秒数，默认值为60s -->
+			<connBusyTimeout>60</connBusyTimeout>
+			<!-- 连接最大寿命秒数，默认值为3600s -->
+			<connMaxAge>3600</connMaxAge>
+			<!-- 存储连接池日志的目录 -->
+			<logPath></logPath>
+		</all>
+		<database type="mysql">
+			<!-- 打开连接池设定，true/false,默认为true -->
+			<enablePool>true</enablePool>
+			<!-- 打开日志支持 ，true/false,默认为false-->
+			<enableLog>false</enableLog>
+			<!-- 当低峰的时候，回收连接到最小连接，默认为true  -->
+			<keepMinConn>true</keepMinConn>
+			<!-- 数据库驱动 -->
+			<driver>com.mysql.jdbc.Driver</driver>
+			<!-- 测试sql，用于测试连接是否可用 -->
+			<testSQL>select 1</testSQL>
+			<!-- 最小连接数 -->
+			<minConns>1</minConns>
+			<!-- 最大连接数 -->
+			<maxConns>10</maxConns>			
+			<!-- 连接闲时超时秒数，默认值为60s-->
+			<connIdleTimeout>60</connIdleTimeout>
+			<!-- 连接忙时超时秒数，默认值为60s -->
+			<connBusyTimeout>60</connBusyTimeout>
+			<!-- 连接最大寿命秒数，默认值为3600s -->
+			<connMaxAge>3600</connMaxAge>
+			<!-- 存储连接池日志的目录 -->
+			<logPath></logPath>
+		</database>
+		<database type="oracle">
+			<!-- 打开连接池设定，true/false,默认为true -->
+			<enablePool>true</enablePool>
+			<!-- 打开日志支持 ，true/false,默认为false-->
+			<enableLog>false</enableLog>
+			<!-- 当低峰的时候，回收连接到最小连接，默认为true  -->
+			<keepMinConn>true</keepMinConn>
+			<!-- 数据库驱动 -->
+			<driver>oracle.jdbc.driver.OracleDriver</driver>
+			<!-- 测试sql，用于测试连接是否可用 -->
+			<testSQL>select sysdate from dual</testSQL>
+			<!-- 最小连接数 -->
+			<minConns>1</minConns>
+			<!-- 最大连接数 -->
+			<maxConns>10</maxConns>			
+			<!-- 连接闲时超时秒数，默认值为60s-->
+			<connIdleTimeout>60</connIdleTimeout>
+			<!-- 连接忙时超时秒数，默认值为60s -->
+			<connBusyTimeout>60</connBusyTimeout>
+			<!-- 连接最大寿命秒数，默认值为3600s -->
+			<connMaxAge>3600</connMaxAge>
+			<!-- 存储连接池日志的目录 -->
+			<logPath></logPath>
+
+		</database>
+	</global>
+	<!-- 连接池列表 -->
+	<poolList>
+		<!-- 提供给dao模块使用的系统连接池，主要用于框架的系统服务 -->
+		<poolSys>
+			<!-- 数据库类型，当前仅允许mysql/oracle -->
+			<dbType>mysql</dbType>
+			<!-- 服务器连接地址 -->
+			<server>jdbc:mysql://127.0.0.1:3306/ngn?characterEncoding=utf-8</server>
+			<!-- 登录用户名 -->
+			<username>root</username>
+			<!-- 登录密码 -->
+			<password>umtone888</password>
+			<!-- 最小连接数 -->
+			<minConns>1</minConns>
+			<!-- 最大连接数 -->
+			<maxConns>10</maxConns>
+		</poolSys>
+		<!-- 连接池名，排在第一个的pool会当做默认的pool-->
+		<pool name="tetra">
+			<!-- 数据库类型，当前仅允许mysql/oracle -->
+			<dbType>mysql</dbType>
+			<!-- 服务器连接地址 -->
+			<server>jdbc:mysql://127.0.0.1:3306/ngn?characterEncoding=utf-8</server>
+			<!-- 登录用户名 -->
+			<username>root</username>
+			<!-- 登录密码 -->
+			<password>umtone888</password>
+			<!-- 最小连接数 -->
+			<minConns>1</minConns>
+			<!-- 最大连接数 -->
+			<maxConns>10</maxConns>
+		</pool>
+	</poolList>
+
+	<!-- 连接池组，通过连接池组可以实现集群访问 
+		通过连接池组，可以支持类似master/slave模式。
+		通过连接池组，可以将流量分布到多个slave上。
+	-->
+	<poolGroup>
+		<!-- name等同于连接池名，algorithm相当于轮询算法，当前支持cycle,random，默认cycle。 -->
+		<!-- group内为连接池名列表，使用";"分割 -->		
+		<group name="mysql" algorithm="cycle">mysqlDB1;travel</group>
+	</poolGroup>
+</config>
