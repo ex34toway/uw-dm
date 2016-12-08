@@ -12,40 +12,42 @@ public @interface ColumnMeta {
 	/**
 	 * 列名
 	 * 
-	 * @return
+	 * @return String 列名
 	 */
 	public String columnName() default "";
 
 	/**
 	 * 数据类型
 	 * 
-	 * @return
+	 * @return String 数据类型
 	 */
 	public String dataType() default "";
 
 	/**
 	 * 最大长度
 	 * 
-	 * @return
+	 * @return int 最大长度
 	 */
 	public int dataSize() default 0;
 
 	/**
 	 * 是否主键
 	 * 
-	 * @return
+	 * @return boolean 是否主键
 	 */
 	public boolean primaryKey() default false;
 
 	/**
 	 * 是否可以为空？
 	 * 
-	 * @return
+	 * @return boolean 是否可以为空？
 	 */
 	public boolean nullable() default true;
 
 	/**
 	 * 是否是自动递增字段？
+	 * 
+	 * @return boolean 是否是自动递增字段？
 	 */
 	public boolean autoIncrement() default false;
 }

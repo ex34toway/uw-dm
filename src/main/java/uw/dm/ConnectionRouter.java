@@ -11,14 +11,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 匹配连接路由规则。
+ * 通过connectionRouter.xml文件进行配置。
  * 
  * @author axeon
  * 
  */
 public class ConnectionRouter {
-	
-	private static final Logger logger = LoggerFactory.getLogger(ConnectionRouter.class);
 
+	private static final Logger logger = LoggerFactory.getLogger(ConnectionRouter.class);
 
 	private static XMLConfiguration config;
 
@@ -42,18 +42,18 @@ public class ConnectionRouter {
 			in = ConnectionRouter.class.getResourceAsStream("/connectionRouter.xml");
 			config.load(in, "UTF-8");
 		} catch (Exception e) {
-			logger.error("connectionRouter.xml can't init!",e);
+			logger.error("connectionRouter.xml can't init!", e);
 		} finally {
 			try {
 				in.close();
 			} catch (Exception e) {
 			}
 		}
-		
+
 		// 规则解析
 		List<Object> list = config.getList("mapList.map[@table]");
 		for (int i = 0; i < list.size(); i++) {
-			String table = (String)list.get(i);
+			String table = (String) list.get(i);
 			MapObj mo = new MapObj();
 			mo.setTable(table);
 			mo.setAccess(config.getString("mapList.map(" + i + ")[@access]", "all"));
@@ -68,13 +68,12 @@ public class ConnectionRouter {
 		}
 	}
 
-
 	/**
 	 * 根据提供的table信息来获得映射连接。
 	 * 
-	 * @param table
-	 * @param method
-	 * @return
+	 * @param table 表名
+	 * @param access 方法all/write/read
+	 * @return 连接名
 	 */
 	public static String getMappedDatabase(String table, String access) {
 		String mk = table + "^" + access;
@@ -89,9 +88,9 @@ public class ConnectionRouter {
 	/**
 	 * 根据提供的table信息来获得映射连接。
 	 * 
-	 * @param table
-	 * @param method
-	 * @return
+	 * @param table 表名
+	 * @param access 方法all/write/read
+	 * @return 连接名
 	 */
 	private static String map(String table, String access) {
 		String mvalue = null;

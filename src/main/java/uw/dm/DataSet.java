@@ -13,7 +13,7 @@ public interface DataSet {
 	/**
 	 * 获得列名列表
 	 * 
-	 * @return
+	 * @return String[] 列名列表
 	 */
 	public String[] getColumnNames();
 
@@ -67,22 +67,22 @@ public interface DataSet {
 	/**
 	 * 当前结果集大小
 	 * 
-	 * @return
+	 * @return int 结果集大小
 	 */
 	public int size();
 
 	/**
 	 * 取得整个分页的大小
 	 * 
-	 * @return
+	 * @return int 分页大小
 	 */
 	public int pagecount();
 
 	/**
 	 * 获得数组中指定位置的数据
 	 * 
-	 * @param colname
-	 * @return
+	 * @param colname 列名
+	 * @return Object 数值
 	 */
 	public Object get(String colname);
 

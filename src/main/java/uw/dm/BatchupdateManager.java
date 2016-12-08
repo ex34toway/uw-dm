@@ -10,27 +10,29 @@ public interface BatchupdateManager {
 
 	/**
 	 * 设置批量更新的数量
-	 * 
-	 * @return boolean
+	 * @param size 批量更新的数量
 	 */
 	public void setBatchSize(int size);
 
 	/**
 	 * 获得批量更新的数量
 	 * 
-	 * @return boolean
+	 * @return 获得批量更新的数量
 	 */
 	public int getBatchSize();
 
 	/**
 	 * 获得Batch的sql列表
 	 * 
-	 * @return
+	 * @return Batch的sql列表
 	 */
 	public List<String> getBatchList();
 
 	/**
 	 * 提交该事务.
+	 * 
+	 * @return 执行结果
+	 * 
 	 */
 	public List<List<Integer>> submit() throws TransactionException;
 

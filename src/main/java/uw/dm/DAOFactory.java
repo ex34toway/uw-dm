@@ -72,10 +72,11 @@ public abstract class DAOFactory {
 	public abstract TransactionManager beginTransaction() throws TransactionException;
 
 	/**
-	 * 按照条件，计算指定sql的大小
+	 * 返回sql执行后的大小。
+	 * 只支持数值型的返回结果。
 	 * 
-	 * @param addSql
-	 * @return
+	 * @param countSql
+	 * @return 返回结果
 	 * @throws TransactionException
 	 */
 	public abstract long queryForCount(String countSql) throws TransactionException;
@@ -94,7 +95,7 @@ public abstract class DAOFactory {
 	 * @param startIndex
 	 * @param resultNum
 	 * @param autoCount
-	 * @return
+	 * @return DataSet
 	 * @throws TransactionException
 	 */
 	public abstract DataSet queryForDataSet(String selectsql, int startIndex, int resultNum, boolean autoCount) throws TransactionException;
