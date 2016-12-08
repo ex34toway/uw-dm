@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -86,7 +87,7 @@ public class EntityCommandImpl {
 		int effect = 0;
 		try {
 			con = dao.getTransactionController().getConnection(connName);
-			pstmt = dao.getBatchUpdateController().prepareStatement(con, sb.toString());
+			pstmt = con.prepareStatement(sb.toString(),Statement.RETURN_GENERATED_KEYS);
 			int seq = 0;
 			for (String col : cols) {
 				FieldMetaInfo fmi = emi.getFieldMetaInfo(col);
@@ -96,12 +97,21 @@ public class EntityCommandImpl {
 				DmReflectUtils.DAOLiteSaveReflect(pstmt, entity, fmi, ++seq);
 			}
 			effect = pstmt.executeUpdate();
+			// 检查是否是自增的，如果是则回取id。
+			ResultSet keys = pstmt.getGeneratedKeys(); 
+			if (keys.next()) {
+				long key = keys.getLong(1);
+				List<FieldMetaInfo> pks = emi.getPklist();
+				if (pks.size() > 0) {
+					Field fd = pks.get(0).getField();
+					fd.set(entity, key);
+				}
+			}
 		} catch (Exception e) {
 			exception = e.toString();
-
 			throw new TransactionException("TransactionException in DAOCommandImpl.java:save()", e);
 		} finally {
-			if (!dao.getBatchUpdateController().getBatchStatus() && con != null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e) {
@@ -118,6 +128,7 @@ public class EntityCommandImpl {
 		}
 		long time = System.currentTimeMillis() - start;
 		dao.addSqlExecuteStats(connName, sb.toString(), "", time, exception);
+
 		return entity;
 	}
 
@@ -439,7 +450,7 @@ public class EntityCommandImpl {
 	}
 
 	/**
-	 * 获得列表
+	 * 获得列表。
 	 * 
 	 * @return
 	 */
@@ -555,7 +566,7 @@ public class EntityCommandImpl {
 		EntityMetaInfo emi = entityMetaCache.get(entityCls.getName());
 		if (emi == null) {
 			emi = new EntityMetaInfo();
-			if (entityCls.isAnnotationPresent(TableMeta.class)){
+			if (entityCls.isAnnotationPresent(TableMeta.class)) {
 				TableMeta tm = entityCls.getAnnotation(TableMeta.class);
 				emi.setTableName(tm.tableName());
 			}
@@ -570,6 +581,7 @@ public class EntityCommandImpl {
 					fieldInfo.setColumnName(meta.columnName());
 					fieldInfo.setPrimaryKey(meta.primaryKey());
 					fieldInfo.setField(field);
+					fieldInfo.setAutoIncrement(meta.autoIncrement());
 					if (fieldInfo.isPrimaryKey()) {
 						emi.addPklist(fieldInfo);
 					}

@@ -57,13 +57,14 @@ public class DAOFactoryImpl extends DAOFactory {
 		statsList = new ArrayList<SqlExecuteStats>();
 	}
 
+
 	/**
-	 * 添加统计数据
-	 * 
-	 * @param connName
-	 * @param sql
-	 * @param param
-	 * @param time
+	 * 添加性能统计数据
+	 * @param connName 连接名称
+	 * @param sql sql
+	 * @param param sql参数
+	 * @param time 执行时间
+	 * @param exception 异常信息
 	 */
 	protected void addSqlExecuteStats(String connName, String sql, String param, long time, String exception) {
 		SqlExecuteStats ses = new SqlExecuteStats(connName, sql, param, time, exception);
@@ -74,7 +75,7 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	/**
-	 * 获得sql执行列表
+	 * 获得sql性能统计数据列表
 	 * 
 	 * @return
 	 */

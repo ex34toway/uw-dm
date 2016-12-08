@@ -26,6 +26,11 @@ public class FieldMetaInfo {
 	private boolean primaryKey = false;
 	
 	/**
+	 * 是否是自动递增字段。
+	 */
+	private boolean autoIncrement = false;
+	
+	/**
 	 * 属性反射句柄
 	 */
 	private Field field;
@@ -61,4 +66,20 @@ public class FieldMetaInfo {
 	public void setField(Field field) {
 		this.field = field;
 	}
+
+	/**
+	 * @return the autoIncrement
+	 */
+	public boolean isAutoIncrement() {
+		return autoIncrement;
+	}
+
+	/**
+	 * @param autoIncrement the autoIncrement to set
+	 */
+	public void setAutoIncrement(boolean autoIncrement) {
+		this.autoIncrement = autoIncrement;
+	}
+	
+	
 }

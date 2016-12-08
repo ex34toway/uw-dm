@@ -1,7 +1,7 @@
 package uw.dm.gencode;
 
 /**
- * 表信息
+ * 表的主键信息。
  * 
  * @author axeon
  *

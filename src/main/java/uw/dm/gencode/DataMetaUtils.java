@@ -16,6 +16,11 @@ import org.slf4j.LoggerFactory;
 import uw.dm.connectionpool.ConnectionManager;
 import uw.dm.util.DmStringUtils;
 
+/**
+ * 数据库信息的工具类。
+ * @author axeon
+ *
+ */
 public class DataMetaUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataMetaUtils.class);
@@ -48,7 +53,7 @@ public class DataMetaUtils {
 	/**
 	 * 获取数据库中的表名称与视图名称
 	 * 
-	 * @return
+	 * @return 表信息的列表
 	 */
 	public static List<MetaTableInfo> getTablesAndViews(Set<String> tables) {
 		Connection conn = null;
@@ -92,7 +97,7 @@ public class DataMetaUtils {
 	 * 
 	 * @param tableName
 	 *            表名
-	 * @return
+	 * @return 表字段信息的列表
 	 * @throws Exception
 	 */
 	public static List<MetaColumnInfo> getColumnList(String tableName, List<MetaPrimaryKeyInfo> pklist) {
@@ -189,7 +194,7 @@ public class DataMetaUtils {
 	 * 
 	 * @param tableName
 	 *            表名
-	 * @return
+	 * @return 主键列表。
 	 * @throws Exception
 	 */
 	public static List<MetaPrimaryKeyInfo> getPrimaryKey(String tableName) {

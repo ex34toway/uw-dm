@@ -47,19 +47,13 @@ public class DataListImpl<T> implements DataList<T> {
 	private List<T> results = null;
 
 
+
 	/**
-	 * 构造器.
-	 * 
-	 * @param dao
-	 *            用来提供factory实例。
-	 * @param colList
-	 *            指定的列.
-	 * @param addSQL
-	 *            附加的条件语句.
-	 * @param startIndex
-	 *            起始显示的索引
-	 * @param resultNum
-	 *            返回的结果集大小
+	 * DataList构造器。
+	 * @param results 结果集
+	 * @param startIndex 开始位置
+	 * @param resultNum 每页大小
+	 * @param allSize 所有的数量
 	 */
 	public DataListImpl(List<T> results,int startIndex, int resultNum, int allSize) {
 		this.results = results;
@@ -209,6 +203,9 @@ public class DataListImpl<T> implements DataList<T> {
 		}
 	}
 
+	/**
+	 * 获得iterator列表。
+	 */
 	public Iterator<T> iterator() {
 		return this;
 	}

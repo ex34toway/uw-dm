@@ -81,21 +81,20 @@ public class StatsLogWriteTask implements Runnable {
 		String tableName = "dm_stats_"+dateFormat.format(new java.util.Date());
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String pdsql = "INSERT INTO " + tableName + "(id,conn_name,sql_info,sql_param,use_time,exception,exe_date) " + "values "
-				+ "(?,?,?,?,?,?,?) ";
+		String pdsql = "INSERT INTO " + tableName + "(conn_name,sql_info,sql_param,use_time,exception,exe_date) " + "values "
+				+ "(?,?,?,?,?,?) ";
 		try {
 			conn = dao.getConnection(tableName, "write");
 			conn.setAutoCommit(false);
 			pstmt = conn.prepareStatement(pdsql);
 			for (int i = 0; i < list.size(); i++) {
 				SqlExecuteStats ss = list.get(i);
-				pstmt.setLong(1, SequenceManager.nextId(""));
-				pstmt.setString(2, ss.getConnName());
-				pstmt.setString(3, ss.getSql());
-				pstmt.setString(4, ss.getParam());
-				pstmt.setInt(5, (int) ss.getTime());
-				pstmt.setString(6, ss.getException());
-				pstmt.setTimestamp(7, DmValueUtils.dateToTimestamp(ss.getActionDate()));
+				pstmt.setString(1, ss.getConnName());
+				pstmt.setString(2, ss.getSql());
+				pstmt.setString(3, ss.getParam());
+				pstmt.setInt(4, (int) ss.getTime());
+				pstmt.setString(5, ss.getException());
+				pstmt.setTimestamp(6, DmValueUtils.dateToTimestamp(ss.getActionDate()));
 				pstmt.addBatch();
 				if ((i + 1) % 100 == 0 && i > 0) {
 					// 每隔100次自动提交

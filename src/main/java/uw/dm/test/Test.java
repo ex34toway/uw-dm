@@ -14,7 +14,7 @@ public class Test {
 			MscPerm mp = dao.load(MscPerm.class, 150);
 			System.out.println(mp);
 			mp.setModifyDate(new java.util.Date());
-			dao.update("test", mp);
+			dao.save("test", mp);
 			System.out.println(mp);
 		} catch (Exception e) {
 			e.printStackTrace();

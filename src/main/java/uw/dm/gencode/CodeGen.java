@@ -17,21 +17,45 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import uw.dm.util.DmStringUtils;
 
+/**
+ * 代码生成入口。
+ * @author axeon
+ *
+ */
 public class CodeGen {
 
 	private static final Logger logger = LoggerFactory.getLogger(CodeGen.class);
 
+	/**
+	 * 文件编码
+	 */
 	public static String SYSTEM_ENCODING = "UTF-8";
 
-	public static String SOURCECODE_PATH = "D:/work_leleku/dm/src/main/java";
+	/**
+	 * 源代码的路径
+	 */
+	public static String SOURCECODE_PATH = "";
 
-	public static String PACKAGE_NAME = "uw.dm.entity";
+	/**
+	 * 包名
+	 */
+	public static String PACKAGE_NAME = "";
 
+	/**
+	 * 连接池名称，不设置为默认连接
+	 */
 	public static String CONN_NAME = "";
 
+	/**
+	 * 指定要生成的表的信息，多个表名用","分割
+	 */
 	public static String TABLE_LIST = "";
 
 	public static void main(String[] args) throws Exception {
+		CodeGen.PACKAGE_NAME="zwy.servicenter.entity";
+		CodeGen.SOURCECODE_PATH="D:/work_leleku/servicenter/src/main/java";
+		CodeGen.TABLE_LIST = "dm_stats_20161208";
+		
 		logger.info("开始代码生成...");
 		logger.info("CONN_NAME={}", CONN_NAME);
 		logger.info("SOURCECODE_PATH={}", SOURCECODE_PATH);
@@ -44,6 +68,10 @@ public class CodeGen {
 
 	private static Configuration cfg;
 
+	/**
+	 * 初始化模板配置。
+	 * @throws Exception
+	 */
 	private static void init() throws Exception {
 		// 初始化FreeMarker配置
 		// 创建一个Configuration实例
@@ -52,6 +80,10 @@ public class CodeGen {
 		cfg.setClassForTemplateLoading(CodeGen.class, "/uw/dm/gencode/");// 类路径
 	}
 
+	/**
+	 * 预处理信息。
+	 * @throws Exception
+	 */
 	private static void process() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String author = "axeon";
@@ -59,7 +91,7 @@ public class CodeGen {
 		map.put("date", new Date());
 		map.put("package", PACKAGE_NAME);
 		HashSet<String> set = new HashSet<String>();
-		if (TABLE_LIST != null && TABLE_LIST.equals("")) {
+		if (TABLE_LIST != null && !TABLE_LIST.equals("")) {
 			String[] ts = TABLE_LIST.split(",");
 			for (String t : ts) {
 				set.add(t);
@@ -79,12 +111,18 @@ public class CodeGen {
 
 			String fileName = DmStringUtils.toUpperFirst(tmeta.getEntityName()) + ".java";
 			String savePath = SOURCECODE_PATH + "/" + PACKAGE_NAME.replaceAll("\\.", "/") + "/";
-			Template template = cfg.getTemplate("pojo.ftl");
+			Template template = cfg.getTemplate("entity.ftl");
 			buildTemplate(template, map, savePath, fileName);
-			break;
 		}
 	}
 
+	/**
+	 * 生成代码
+	 * @param template
+	 * @param root
+	 * @param savePath
+	 * @param fileName
+	 */
 	private static void buildTemplate(Template template, Map root, String savePath, String fileName) {
 		String realFileName = savePath + fileName;
 		String realSavePath = savePath;

@@ -14,7 +14,6 @@ import uw.dm.annotation.TableMeta;
  * ${tableMeta.remarks}
  * 
  * @author ${author}
- * 
  * @version $Revision: 1.00 $ $Date: ${date?string("yyyy-MM-dd HH:mm:ss")}
  */
 @TableMeta(tableName="${tableMeta.tableName}",tableType="${tableMeta.tableType}")
@@ -65,7 +64,7 @@ public class ${tableMeta.entityName?cap_first} implements DataEntity,Serializabl
 	 */
 	private void _INIT_UPDATE_INFO() {
 		this._UPDATED_COLUMN = new HashSet<String>();
-		this._UPDATED_INFO = new StringBuilder("表${tableMeta.tableName}主键\"" + this.id + "\"更新为:\r\n");
+		this._UPDATED_INFO = new StringBuilder("表${tableMeta.tableName}主键\"" + <#list pkList as pk>this.${pk.propertyName}+ </#list>"\"更新为:\r\n");
 	}	
 
 <#list columnList as column>
@@ -89,7 +88,7 @@ public class ${tableMeta.entityName?cap_first} implements DataEntity,Serializabl
 				_INIT_UPDATE_INFO();
 			}
 			this._UPDATED_COLUMN.add("${column.columnName}");
-			this._UPDATED_INFO.append("${column.columnName}由\"" + this.menuPath + "\"改为\"" + menuPath + "\"\r\n");
+			this._UPDATED_INFO.append("${column.columnName}由\"" + this.${column.propertyName}+ "\"改为\"" + ${column.propertyName} + "\"\r\n");
 			this.${column.propertyName} = ${column.propertyName};
 		}
 	}

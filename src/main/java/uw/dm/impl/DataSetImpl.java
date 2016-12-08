@@ -13,7 +13,7 @@ import uw.dm.DataSet;
 /**
  * DataSet实现类
  * 
- * @author zhangjin
+ * @author axeon
  * 
  */
 public class DataSetImpl implements DataSet, Serializable, Cloneable {

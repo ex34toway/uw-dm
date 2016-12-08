@@ -125,13 +125,21 @@ public class TransactionManagerImpl implements TransactionManager {
 
 	/**
 	 * factory类通过该方法为所有的数据库操作提供连接。
-	 * 
+	 * @param table 表名
+	 * @param access 访问方式
 	 * @return
 	 */
 	public Connection getConnection(String table, String access) throws SQLException {
 		return this.getConnection(getConnName(table, access));
 	}
 
+
+	/**
+	 * 获得连接名。
+	 * @param table 表名
+	 * @param access 访问方式
+	 * @return
+	 */
 	public String getConnName(String table, String access) {
 		return ConnectionRouter.getMappedDatabase(table, access);
 	}

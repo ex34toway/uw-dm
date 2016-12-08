@@ -84,7 +84,7 @@ public class StatsCheckTableThread implements Runnable {
 			HashSet<String> tSet = getCurrentTableSet();
 			String tableName = "dm_stats_" + TODAY_TEXT;
 			if (!tSet.contains(tableName)) {
-				String sql = "create table " + tableName + "(\n" + "id bigint(20) NOT NULL,\n"
+				String sql = "create table " + tableName + "(\n" + "id bigint(20) NOT NULL AUTO_INCREMENT,\n"
 						+ "conn_name varchar(100) DEFAULT NULL,\n" + "sql_info varchar(1000) DEFAULT NULL,\n"
 						+ "sql_param varchar(1000) DEFAULT NULL,\n" + "use_time int(11) DEFAULT NULL,\n"
 						+ "exception varchar(200) DEFAULT NULL,\n" + "exe_date datetime DEFAULT CURRENT_TIMESTAMP,\n"
@@ -94,7 +94,7 @@ public class StatsCheckTableThread implements Runnable {
 			}
 			tableName = "dm_stats_" + TOMORROW_TEXT;
 			if (!tSet.contains(tableName)) {
-				String sql = "create table " + tableName + "(\n" + "id bigint(20) NOT NULL,\n"
+				String sql = "create table " + tableName + "(\n" + "id bigint(20) NOT NULL AUTO_INCREMENT,\n"
 						+ "conn_name varchar(100) DEFAULT NULL,\n" + "sql_info varchar(1000) DEFAULT NULL,\n"
 						+ "sql_param varchar(1000) DEFAULT NULL,\n" + "use_time int(11) DEFAULT NULL,\n"
 						+ "exception varchar(200) DEFAULT NULL,\n" + "exe_date datetime DEFAULT CURRENT_TIMESTAMP,\n"
