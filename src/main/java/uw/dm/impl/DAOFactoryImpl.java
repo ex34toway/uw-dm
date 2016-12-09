@@ -57,18 +57,23 @@ public class DAOFactoryImpl extends DAOFactory {
 		statsList = new ArrayList<SqlExecuteStats>();
 	}
 
-
 	/**
 	 * 添加性能统计数据
-	 * @param connName 连接名称
-	 * @param sql sql
-	 * @param param sql参数
-	 * @param time 执行时间
-	 * @param exception 异常信息
+	 * 
+	 * @param connName
+	 *            连接名称
+	 * @param sql
+	 *            sql
+	 * @param param
+	 *            sql参数
+	 * @param time
+	 *            执行时间
+	 * @param exception
+	 *            异常信息
 	 */
 	protected void addSqlExecuteStats(String connName, String sql, String param, long time, String exception) {
 		SqlExecuteStats ses = new SqlExecuteStats(connName, sql, param, time, exception);
-		if(statsList!=null){
+		if (statsList != null) {
 			statsList.add(ses);
 		}
 		StatsLogService.logStats(ses);
@@ -237,7 +242,7 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	@Override
-	public <T> DataList<T> list(Class<T> cls, String selectsql, Object[] paramList) throws TransactionException {
+	public <T> DataList<T> list(Class<T> cls, String selectsql, Object... paramList) throws TransactionException {
 		return list(null, cls, selectsql, paramList, 0, 0, false);
 	}
 
@@ -272,7 +277,7 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	@Override
-	public <T> DataList<T> list(String connName, Class<T> cls, String selectsql, Object[] paramList)
+	protected <T> DataList<T> list(String connName, Class<T> cls, String selectsql, Object... paramList)
 			throws TransactionException {
 		return list(connName, cls, selectsql, paramList, 0, 0, false);
 	}
@@ -288,30 +293,20 @@ public class DAOFactoryImpl extends DAOFactory {
 			int resultNum, boolean autoCount) throws TransactionException {
 		DataList<T> list = EntityCommandImpl.list(this, connName, cls, selectsql, paramList, startIndex, resultNum,
 				autoCount);
-
 		return list;
 	}
 
 	/**
 	 * 获得单条数据。
 	 */
+
 	@Override
-	public <T> T listSingle(Class<T> cls, String selectsql) throws TransactionException {
-		return listSingle(null, cls, selectsql, null);
+	public <T> T queryForSingleObject(Class<T> cls, String selectsql, Object... paramList) throws TransactionException {
+		return queryForSingleObject(null, cls, selectsql, paramList);
 	}
 
 	@Override
-	public <T> T listSingle(Class<T> cls, String selectsql, Object[] paramList) throws TransactionException {
-		return listSingle(null, cls, selectsql, null);
-	}
-
-	@Override
-	public <T> T listSingle(String connName, Class<T> cls, String selectsql) throws TransactionException {
-		return listSingle(connName, cls, selectsql, null);
-	}
-
-	@Override
-	public <T> T listSingle(String connName, Class<T> cls, String selectsql, Object[] paramList)
+	public <T> T queryForSingleObject(String connName, Class<T> cls, String selectsql, Object... paramList)
 			throws TransactionException {
 		T t = EntityCommandImpl.listSingle(this, connName, cls, selectsql, paramList);
 		return t;
@@ -338,33 +333,6 @@ public class DAOFactoryImpl extends DAOFactory {
 	@Override
 	public <T> T load(String connName, Class<T> cls, String tableName, Serializable id) throws TransactionException {
 		return EntityCommandImpl.load(this, connName, cls, tableName, id);
-	}
-
-	/**
-	 * count有多少条记录
-	 */
-	@Override
-	public long queryForCount(String sql) throws TransactionException {
-		return queryForCount(sql, (Object[]) null);
-	}
-
-	@Override
-	public long queryForCount(String sql, Object[] paramList) throws TransactionException {
-		return queryForCount(null, sql, paramList);
-	}
-
-	@Override
-	public long queryForCount(String connName, String sql) throws TransactionException {
-		return queryForCount(connName, sql, (Object[]) null);
-	}
-
-	@Override
-	public long queryForCount(String connName, String sql, Object[] paramList) throws TransactionException {
-		long value = 0;
-		Object o = SQLCommandImpl.selectForSingleValue(this, connName, sql, paramList);
-		if (o != null)
-			value = Long.parseLong(o.toString());
-		return value;
 	}
 
 	/**
@@ -437,12 +405,6 @@ public class DAOFactoryImpl extends DAOFactory {
 	@Override
 	public DataSet queryForDataSet(String connName, String selectsql, Object[] paramList, int startIndex, int resultNum,
 			boolean autoCount) throws TransactionException {
-		int count = 0;
-		if (autoCount) {
-			String countsql = "select count(1) from (" + selectsql + ") must_alias";
-			count = Integer
-					.parseInt(SQLCommandImpl.selectForSingleValue(this, connName, countsql, paramList).toString());
-		}
 		DataSet ds = SQLCommandImpl.selectForDataSet(this, connName, selectsql, paramList, startIndex, resultNum,
 				autoCount);
 		return ds;
@@ -451,61 +413,32 @@ public class DAOFactoryImpl extends DAOFactory {
 	/**
 	 * 建立一个单列多行数据的查询
 	 */
+
 	@Override
-	public List<?> queryForSingleList(String connName, String sql) throws TransactionException {
-		return queryForSingleList(connName, sql, (Object[]) null, 0, 0);
+	public <T> List<T> queryForSingleList(Class<T> cls, String sql, Object... paramList) throws TransactionException {
+		return queryForSingleList(null, sql, paramList);
 	}
 
 	@Override
-	public List<?> queryForSingleList(String connName, String sql, Object[] paramList) throws TransactionException {
-		return queryForSingleList(connName, sql, paramList, 0, 0);
-
-	}
-
-	@Override
-	public List<?> queryForSingleList(String sql) throws TransactionException {
-		return queryForSingleList(null, (Object[]) null, 0, 0);
-	}
-
-	@Override
-	public List<?> queryForSingleList(String sql, Object[] paramList) throws TransactionException {
-		return queryForSingleList(null, sql, paramList, 0, 0);
-	}
-
-	@Override
-	public List<?> queryForSingleList(String sql, Object[] paramList, int startIndex, int resultNum)
+	public <T> List<T> queryForSingleList(String connName, Class<T> cls, String sql, Object... paramList)
 			throws TransactionException {
-		return queryForSingleList(null, sql, paramList, startIndex, resultNum);
-	}
-
-	@Override
-	public List<?> queryForSingleList(String connName, String sql, Object[] paramList, int startIndex, int resultNum)
-			throws TransactionException {
-		List<?> ret = SQLCommandImpl.selectForSingleList(this, connName, sql, paramList, startIndex, resultNum);
+		List<T> ret = SQLCommandImpl.selectForSingleList(this, connName, cls, sql, paramList);
 		return ret;
 	}
 
 	/**
 	 * 建立一个单行单数据的查询
 	 */
+
 	@Override
-	public Object queryForSingleValue(String sql) throws TransactionException {
-		return queryForSingleValue(sql, (Object[]) null);
+	public <T> T queryForSingleValue(Class<T> cls, String sql, Object... paramList) throws TransactionException {
+		return queryForSingleValue(null, cls, sql, paramList);
 	}
 
 	@Override
-	public Object queryForSingleValue(String sql, Object[] paramList) throws TransactionException {
-		return queryForSingleValue(null, sql, paramList);
-	}
-
-	@Override
-	public Object queryForSingleValue(String connName, String sql) throws TransactionException {
-		return queryForSingleValue(connName, sql, null);
-	}
-
-	@Override
-	public Object queryForSingleValue(String connName, String sql, Object[] paramList) throws TransactionException {
-		Object ret = SQLCommandImpl.selectForSingleValue(this, connName, sql, paramList);
+	public <T> T queryForSingleValue(String connName, Class<T> cls, String sql, Object... paramList)
+			throws TransactionException {
+		T ret = SQLCommandImpl.selectForSingleValue(this, connName, cls, sql, paramList);
 		return ret;
 	}
 

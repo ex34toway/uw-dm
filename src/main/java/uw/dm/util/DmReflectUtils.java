@@ -56,6 +56,12 @@ public class DmReflectUtils {
 			pstmt.setTimestamp(sequence, DmValueUtils.dateToTimestamp((java.util.Date) fd.get(entity)));
 		} else if (cls == double.class) {
 			pstmt.setDouble(sequence, fd.getDouble(entity));
+		} else if (cls == float.class) {
+			pstmt.setFloat(sequence, fd.getFloat(entity));
+		} else if (cls == short.class) {
+			pstmt.setShort(sequence, fd.getShort(entity));
+		} else if (cls == byte.class) {
+			pstmt.setByte(sequence, fd.getByte(entity));
 		} else if (cls == boolean.class) {
 			pstmt.setBoolean(sequence, fd.getBoolean(entity));
 		} else {
@@ -95,14 +101,20 @@ public class DmReflectUtils {
 		Class<?> cls = fd.getType();
 		if (cls == int.class) {
 			fd.setInt(entity, new Integer(rs.getInt(fmi.getColumnName())));
+		} else if (cls == long.class) {
+			fd.setLong(entity, rs.getLong(fmi.getColumnName()));
 		} else if (cls == String.class) {
 			fd.set(entity, DmValueUtils.nullToStr((String) rs.getString(fmi.getColumnName())));
 		} else if (cls == Date.class) {
 			fd.set(entity, rs.getTimestamp(fmi.getColumnName()));
-		} else if (cls == long.class) {
-			fd.setLong(entity, rs.getLong(fmi.getColumnName()));
 		} else if (cls == double.class) {
 			fd.setDouble(entity, rs.getDouble(fmi.getColumnName()));
+		} else if (cls == float.class) {
+			fd.setFloat(entity, rs.getFloat(fmi.getColumnName()));
+		} else if (cls == short.class) {
+			fd.setShort(entity, rs.getShort(fmi.getColumnName()));
+		} else if (cls == byte.class) {
+			fd.setByte(entity, rs.getByte(fmi.getColumnName()));
 		} else if (cls == boolean.class) {
 			fd.setBoolean(entity, rs.getBoolean(fmi.getColumnName()));
 		} else {

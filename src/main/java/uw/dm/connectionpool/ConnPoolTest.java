@@ -19,7 +19,7 @@ public class ConnPoolTest {
 					TransactionManager tm = null;
 					try {
 						tm = dao.beginTransaction();
-						count = dao.queryForCount(sql);
+						count = dao.queryForSingleValue(long.class,sql);
 						tm.commit();
 					} catch (TransactionException e) {
 						// TODO Auto-generated catch block
@@ -55,7 +55,7 @@ public class ConnPoolTest {
 					try {
 						tm = dao.beginTransaction();
 						long start = System.currentTimeMillis();
-						dao.queryForCount("select count(1) from dual");
+						dao.queryForSingleValue(long.class,"select count(1) from dual");
 						System.out.println("执行时间为:" + (System.currentTimeMillis() - start));
 						tm.commit();
 					} catch (TransactionException e) {

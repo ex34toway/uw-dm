@@ -57,12 +57,11 @@ public class StatsCheckTableThread implements Runnable {
 	/**
 	 * 获得当前的表Set
 	 */
-	@SuppressWarnings("unchecked")
 	private HashSet<String> getCurrentTableSet() {
 		HashSet<String> set = new HashSet<String>();
 		List<String> list = null;
 		try {
-			list = (List<String>) dao.queryForSingleList(dao.getConnectionName("dm_stats", "all"), "show tables");
+			list = dao.queryForSingleList(dao.getConnectionName("dm_stats", "all"), String.class, "show tables");
 			if (list != null) {
 				for (String s : list) {
 					if (s.startsWith("dm_stats_"))

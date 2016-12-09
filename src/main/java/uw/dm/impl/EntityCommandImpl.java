@@ -30,7 +30,7 @@ import uw.dm.util.EntityMetaInfo;
 import uw.dm.util.FieldMetaInfo;
 
 /**
- * 实体类命令实现。
+ * 实体类命令实现。 g
  * 
  * @author axeon
  *
@@ -87,7 +87,7 @@ public class EntityCommandImpl {
 		int effect = 0;
 		try {
 			con = dao.getTransactionController().getConnection(connName);
-			pstmt = con.prepareStatement(sb.toString(),Statement.RETURN_GENERATED_KEYS);
+			pstmt = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
 			int seq = 0;
 			for (String col : cols) {
 				FieldMetaInfo fmi = emi.getFieldMetaInfo(col);
@@ -98,7 +98,7 @@ public class EntityCommandImpl {
 			}
 			effect = pstmt.executeUpdate();
 			// 检查是否是自增的，如果是则回取id。
-			ResultSet keys = pstmt.getGeneratedKeys(); 
+			ResultSet keys = pstmt.getGeneratedKeys();
 			if (keys.next()) {
 				long key = keys.getLong(1);
 				List<FieldMetaInfo> pks = emi.getPklist();
@@ -469,12 +469,11 @@ public class EntityCommandImpl {
 			throw new TransactionException("EntityMetaInfo[" + cls.getName() + "] not found! ");
 		}
 
-		int allSize = 0;
+		int allsize = 0;
 
 		if (autoCount) {
 			String countsql = "select count(1) from (" + selectsql + ") must_alias";
-			allSize = Integer
-					.parseInt(SQLCommandImpl.selectForSingleValue(dao, connName, countsql, paramList).toString());
+			allsize = SQLCommandImpl.selectForSingleValue(dao, connName, int.class, countsql, paramList);
 		}
 
 		List<T> list = new ArrayList<T>();
@@ -543,7 +542,7 @@ public class EntityCommandImpl {
 		}
 		long time = System.currentTimeMillis() - start;
 		dao.addSqlExecuteStats(connName, selectsql, Arrays.toString(paramList), time, exception);
-		return new DataListImpl<T>(list, startIndex, resultNum, allSize);
+		return new DataListImpl<T>(list, startIndex, resultNum, allsize);
 	}
 
 	static String getTableName(Class<?> cls) {
