@@ -49,12 +49,14 @@ public class DAOFactoryImpl extends DAOFactory {
 		batchupdate = new BatchupdateManagerImpl();
 	}
 
-	public void disableSqlExecuteStats() {
-		statsList = null;
-	}
-
-	public void enableSqlExecuteStats() {
-		statsList = new ArrayList<SqlExecuteStats>();
+	/**
+	 * 使用固定连接名获得一个DAOFactory实现
+	 * 
+	 * @param connname
+	 */
+	public DAOFactoryImpl(String connname) {
+		transaction = new TransactionManagerImpl(connname);
+		batchupdate = new BatchupdateManagerImpl();
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class DAOFactoryImpl extends DAOFactory {
 	 * @param exception
 	 *            异常信息
 	 */
-	protected void addSqlExecuteStats(String connName, String sql, String param, long time, String exception) {
+	void addSqlExecuteStats(String connName, String sql, String param, long time, String exception) {
 		SqlExecuteStats ses = new SqlExecuteStats(connName, sql, param, time, exception);
 		if (statsList != null) {
 			statsList.add(ses);
@@ -80,36 +82,9 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	/**
-	 * 获得sql性能统计数据列表
-	 * 
-	 * @return
-	 */
-	public List<SqlExecuteStats> getSqlExecuteStatsList() {
-		return statsList;
-	}
-
-	/**
-	 * 获得数据库调用次数
-	 * 
-	 * @return
-	 */
-	public int getInvokeCount() {
-		return transaction.getInvokeCount();
-	}
-
-	/**
-	 * 使用固定连接名获得一个DAOFactory实现
-	 * 
-	 * @param connname
-	 */
-	public DAOFactoryImpl(String connname) {
-		transaction = new TransactionManagerImpl(connname);
-		batchupdate = new BatchupdateManagerImpl();
-	}
-
-	/**
 	 * 开始批量更新
 	 */
+	@Override
 	public BatchupdateManager beginBatchupdate() throws TransactionException {
 		this.batchupdate.startBatchUpdate();
 		return this.batchupdate;
@@ -118,29 +93,57 @@ public class DAOFactoryImpl extends DAOFactory {
 	/**
 	 * 开始处理事务
 	 */
+	@Override
 	public TransactionManager beginTransaction() throws TransactionException {
 		this.transaction.startTransaction();
 		return this.transaction;
 	}
 
+	@Override
+	public <T extends DataEntity> int delete(String connName, T entity) throws TransactionException {
+		return delete(connName, entity, null);
+	}
+
+	@Override
+	public <T extends DataEntity> int delete(String connName, T entity, String tableName) throws TransactionException {
+		int effect = EntityCommandImpl.delete(this, null, entity, tableName);
+		return effect;
+	}
+
+	/**
+	 * 删除一条记录
+	 */
+	@Override
+	public <T extends DataEntity> int delete(T entity) throws TransactionException {
+		return delete(null, entity, null);
+	}
+
+	@Override
+	public <T extends DataEntity> int delete(T entity, String tableName) throws TransactionException {
+		return delete(null, entity, tableName);
+	}
+
+	@Override
+	public void disableSqlExecuteStats() {
+		statsList = null;
+	}
+
+	@Override
+	public void enableSqlExecuteStats() {
+		statsList = new ArrayList<SqlExecuteStats>();
+	}
+
 	/**
 	 * 执行一个命令
 	 */
-
-	public int executeCommand(String sql) throws TransactionException {
-		return executeCommand(null, sql, (Object[]) null);
-	}
-
-	public int executeCommand(String sql, Object[] paramList) throws TransactionException {
+	@Override
+	public int executeCommand(String sql, Object... paramList) throws TransactionException {
 		int ret = executeCommand(null, sql, paramList);
 		return ret;
 	}
 
-	public int executeCommand(String connName, String sql) throws TransactionException {
-		return executeCommand(connName, sql, (Object[]) null);
-	}
-
-	public int executeCommand(String connName, String sql, Object[] paramList) throws TransactionException {
+	@Override
+	public int executeCommand(String connName, String sql, Object... paramList) throws TransactionException {
 		int ret = SQLCommandImpl.executeSQL(this, connName, sql, paramList);
 		return ret;
 	}
@@ -150,22 +153,14 @@ public class DAOFactoryImpl extends DAOFactory {
 	 * 
 	 * @return
 	 */
-	public BatchupdateManagerImpl getBatchUpdateController() {
-		return batchupdate;
-	}
-
-	/**
-	 * 获得批量更新管理器。
-	 * 
-	 * @return
-	 */
-	public BatchupdateManager getBatchUpdateManager() {
+	BatchupdateManagerImpl getBatchUpdateController() {
 		return batchupdate;
 	}
 
 	/**
 	 * 提供连接名，获得一个连接
 	 */
+	@Override
 	public Connection getConnection(String configName) throws SQLException {
 		return transaction.getConnection(configName);
 	}
@@ -173,6 +168,7 @@ public class DAOFactoryImpl extends DAOFactory {
 	/**
 	 * 根据配置中表和访问类型获得一个数据库链接。
 	 */
+	@Override
 	public Connection getConnection(String table, String access) throws SQLException {
 		return transaction.getConnection(table, access);
 	}
@@ -180,17 +176,19 @@ public class DAOFactoryImpl extends DAOFactory {
 	/**
 	 * 根据配置中表和访问类型获得连接池名
 	 */
+	@Override
 	public String getConnectionName(String table, String access) {
 		return transaction.getConnName(table, access);
 	}
 
 	/**
-	 * 获得sequnce序列
+	 * 获得数据库调用次数
+	 * 
+	 * @return
 	 */
-	public long getSequenceId(String tableName) {
-		long sequence = -1;
-		sequence = SequenceManager.nextId(tableName);
-		return sequence;
+	@Override
+	public int getInvokeCount() {
+		return transaction.getInvokeCount();
 	}
 
 	@Override
@@ -204,20 +202,31 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	/**
+	 * 获得sequnce序列
+	 */
+	@Override
+	public long getSequenceId(String tableName) {
+		long sequence = -1;
+		sequence = SequenceManager.nextId(tableName);
+		return sequence;
+	}
+
+	/**
+	 * 获得sql性能统计数据列表
+	 * 
+	 * @return
+	 */
+	@Override
+	public List<SqlExecuteStats> getSqlExecuteStatsList() {
+		return statsList;
+	}
+
+	/**
 	 * 获得事务控制器。
 	 * 
 	 * @return
 	 */
-	public TransactionManagerImpl getTransactionController() {
-		return transaction;
-	}
-
-	/**
-	 * 获得事务管理器
-	 * 
-	 * @return
-	 */
-	public TransactionManager getTransactionManager() {
+	TransactionManagerImpl getTransactionController() {
 		return transaction;
 	}
 
@@ -277,7 +286,7 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	@Override
-	protected <T> DataList<T> list(String connName, Class<T> cls, String selectsql, Object... paramList)
+	public <T> DataList<T> list(String connName, Class<T> cls, String selectsql, Object... paramList)
 			throws TransactionException {
 		return list(connName, cls, selectsql, paramList, 0, 0, false);
 	}
@@ -294,22 +303,6 @@ public class DAOFactoryImpl extends DAOFactory {
 		DataList<T> list = EntityCommandImpl.list(this, connName, cls, selectsql, paramList, startIndex, resultNum,
 				autoCount);
 		return list;
-	}
-
-	/**
-	 * 获得单条数据。
-	 */
-
-	@Override
-	public <T> T queryForSingleObject(Class<T> cls, String selectsql, Object... paramList) throws TransactionException {
-		return queryForSingleObject(null, cls, selectsql, paramList);
-	}
-
-	@Override
-	public <T> T queryForSingleObject(String connName, Class<T> cls, String selectsql, Object... paramList)
-			throws TransactionException {
-		T t = EntityCommandImpl.listSingle(this, connName, cls, selectsql, paramList);
-		return t;
 	}
 
 	/**
@@ -335,6 +328,16 @@ public class DAOFactoryImpl extends DAOFactory {
 		return EntityCommandImpl.load(this, connName, cls, tableName, id);
 	}
 
+	@Override
+	public DataSet queryForDataSet(String selectsql) throws TransactionException {
+		return this.queryForDataSet(selectsql, (Object[]) null, 0, 0, false);
+	}
+
+	@Override
+	public DataSet queryForDataSet(String selectsql, int startIndex, int resultNum) throws TransactionException {
+		return this.queryForDataSet(selectsql, (Object[]) null, startIndex, resultNum, false);
+	}
+
 	/**
 	 * 建立一个DataSet的查询
 	 */
@@ -345,24 +348,14 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	@Override
-	public DataSet queryForDataSet(String selectsql, int startIndex, int resultNum) throws TransactionException {
-		return this.queryForDataSet(selectsql, (Object[]) null, startIndex, resultNum, true);
-	}
-
-	@Override
-	public DataSet queryForDataSet(String selectsql) throws TransactionException {
-		return this.queryForDataSet(selectsql, (Object[]) null, 0, 0, false);
+	public DataSet queryForDataSet(String selectsql, Object[] paramList) throws TransactionException {
+		return this.queryForDataSet(selectsql, paramList, 0, 0, false);
 	}
 
 	@Override
 	public DataSet queryForDataSet(String selectsql, Object[] paramList, int startIndex, int resultNum)
 			throws TransactionException {
-		return this.queryForDataSet(selectsql, paramList, startIndex, resultNum, true);
-	}
-
-	@Override
-	public DataSet queryForDataSet(String selectsql, Object[] paramList) throws TransactionException {
-		return this.queryForDataSet(selectsql, paramList, 0, 0, false);
+		return this.queryForDataSet(selectsql, paramList, startIndex, resultNum, false);
 	}
 
 	@Override
@@ -371,9 +364,17 @@ public class DAOFactoryImpl extends DAOFactory {
 		return queryForDataSet(null, selectsql, paramList, startIndex, resultNum, autoCount);
 	}
 
-	/**
-	 * 建立一个DataSet的查询
-	 */
+	@Override
+	public DataSet queryForDataSet(String connName, String selectsql) throws TransactionException {
+		return queryForDataSet(connName, selectsql, (Object[]) null, 0, 0, false);
+	}
+
+	@Override
+	public DataSet queryForDataSet(String connName, String selectsql, int startIndex, int resultNum)
+			throws TransactionException {
+		return queryForDataSet(connName, selectsql, (Object[]) null, startIndex, resultNum, false);
+	}
+
 	@Override
 	public DataSet queryForDataSet(String connName, String selectsql, int startIndex, int resultNum, boolean autoCount)
 			throws TransactionException {
@@ -381,25 +382,14 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	@Override
-	public DataSet queryForDataSet(String connName, String selectsql, int startIndex, int resultNum)
-			throws TransactionException {
-		return queryForDataSet(connName, selectsql, (Object[]) null, startIndex, resultNum, true);
-	}
-
-	@Override
-	public DataSet queryForDataSet(String connName, String selectsql) throws TransactionException {
-		return queryForDataSet(connName, selectsql, (Object[]) null, 0, 0, false);
+	public DataSet queryForDataSet(String connName, String selectsql, Object[] paramList) throws TransactionException {
+		return queryForDataSet(connName, selectsql, paramList, 0, 0, false);
 	}
 
 	@Override
 	public DataSet queryForDataSet(String connName, String selectsql, Object[] paramList, int startIndex, int resultNum)
 			throws TransactionException {
-		return queryForDataSet(connName, selectsql, paramList, startIndex, resultNum, true);
-	}
-
-	@Override
-	public DataSet queryForDataSet(String connName, String selectsql, Object[] paramList) throws TransactionException {
-		return queryForDataSet(connName, selectsql, paramList, 0, 0, false);
+		return queryForDataSet(connName, selectsql, paramList, startIndex, resultNum, false);
 	}
 
 	@Override
@@ -427,6 +417,22 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	/**
+	 * 获得单条数据。
+	 */
+
+	@Override
+	public <T> T queryForSingleObject(Class<T> cls, String selectsql, Object... paramList) throws TransactionException {
+		return queryForSingleObject(null, cls, selectsql, paramList);
+	}
+
+	@Override
+	public <T> T queryForSingleObject(String connName, Class<T> cls, String selectsql, Object... paramList)
+			throws TransactionException {
+		T t = EntityCommandImpl.listSingle(this, connName, cls, selectsql, paramList);
+		return t;
+	}
+
+	/**
 	 * 建立一个单行单数据的查询
 	 */
 
@@ -440,6 +446,17 @@ public class DAOFactoryImpl extends DAOFactory {
 			throws TransactionException {
 		T ret = SQLCommandImpl.selectForSingleValue(this, connName, cls, sql, paramList);
 		return ret;
+	}
+
+	@Override
+	public <T extends DataEntity> T save(String connName, T entity) throws TransactionException {
+		return save(connName, entity, null);
+	}
+
+	@Override
+	public <T extends DataEntity> T save(String connName, T entity, String tableName) throws TransactionException {
+		T t = EntityCommandImpl.save(this, connName, entity, tableName);
+		return t;
 	}
 
 	/**
@@ -456,14 +473,14 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	@Override
-	public <T extends DataEntity> T save(String connName, T entity) throws TransactionException {
-		return save(connName, entity, null);
+	public <T extends DataEntity> int update(String connName, T entity) throws TransactionException {
+		return update(connName, entity, null);
 	}
 
 	@Override
-	public <T extends DataEntity> T save(String connName, T entity, String tableName) throws TransactionException {
-		T t = EntityCommandImpl.save(this, connName, entity, tableName);
-		return t;
+	public <T extends DataEntity> int update(String connName, T entity, String tableName) throws TransactionException {
+		int effect = EntityCommandImpl.update(this, connName, entity, tableName);
+		return effect;
 	}
 
 	/**
@@ -478,41 +495,6 @@ public class DAOFactoryImpl extends DAOFactory {
 	public <T extends DataEntity> int update(T entity, String tableName) throws TransactionException {
 		return update(null, entity, tableName);
 
-	}
-
-	@Override
-	public <T extends DataEntity> int update(String connName, T entity) throws TransactionException {
-		return update(connName, entity, null);
-	}
-
-	@Override
-	public <T extends DataEntity> int update(String connName, T entity, String tableName) throws TransactionException {
-		int effect = EntityCommandImpl.update(this, connName, entity, tableName);
-		return effect;
-	}
-
-	/**
-	 * 删除一条记录
-	 */
-	@Override
-	public <T extends DataEntity> int delete(T entity) throws TransactionException {
-		return delete(null, entity, null);
-	}
-
-	@Override
-	public <T extends DataEntity> int delete(T entity, String tableName) throws TransactionException {
-		return delete(null, entity, tableName);
-	}
-
-	@Override
-	public <T extends DataEntity> int delete(String connName, T entity) throws TransactionException {
-		return delete(connName, entity, null);
-	}
-
-	@Override
-	public <T extends DataEntity> int delete(String connName, T entity, String tableName) throws TransactionException {
-		int effect = EntityCommandImpl.delete(this, null, entity, tableName);
-		return effect;
 	}
 
 }

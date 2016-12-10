@@ -3,7 +3,7 @@ package uw.dm.performance;
 import java.util.Date;
 
 /**
- * 用于统计sql执行的数据
+ * 用于统计sql执行的性能数据
  * 
  */
 public class SqlExecuteStats {
