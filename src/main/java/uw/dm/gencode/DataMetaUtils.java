@@ -18,6 +18,7 @@ import uw.dm.util.DmStringUtils;
 
 /**
  * 数据库信息的工具类。
+ * 
  * @author axeon
  *
  */
@@ -73,19 +74,19 @@ public class DataMetaUtils {
 					if (tables.contains(meta.getTableName())) {
 						list.add(meta);
 					}
-				}else{
+				} else {
 					list.add(meta);
 				}
 			}
 			rs.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -176,13 +177,13 @@ public class DataMetaUtils {
 			}
 			rs.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -216,13 +217,13 @@ public class DataMetaUtils {
 			}
 			rs.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}

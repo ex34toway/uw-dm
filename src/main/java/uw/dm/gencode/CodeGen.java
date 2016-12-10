@@ -123,6 +123,7 @@ public class CodeGen {
 	 * @param savePath
 	 * @param fileName
 	 */
+	@SuppressWarnings("rawtypes")
 	private static void buildTemplate(Template template, Map root, String savePath, String fileName) {
 		String realFileName = savePath + fileName;
 		String realSavePath = savePath;

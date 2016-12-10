@@ -26,7 +26,6 @@ public class StatsCleanDataThread implements Runnable {
 	/**
 	 * 获得当前的表Set
 	 */
-	@SuppressWarnings("unchecked")
 	private HashSet<String> getCurrentTableSet() {
 		HashSet<String> set = new HashSet<String>();
 		List<String> list = null;

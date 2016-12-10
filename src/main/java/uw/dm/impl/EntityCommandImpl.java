@@ -155,10 +155,9 @@ public class EntityCommandImpl {
 		StringBuilder sb = new StringBuilder();
 		List<FieldMetaInfo> pks = emi.getPklist();
 		sb.append("select * from ").append(tableName).append(" where ");
-		for (int i = 0; i < pks.size(); i++) {
-			FieldMetaInfo fmi = pks.get(i);
+		if (pks.size()>0){
+			FieldMetaInfo fmi = pks.get(1);
 			sb.append(fmi.getColumnName()).append("=? ");
-			break;
 		}
 
 		T entity = null;

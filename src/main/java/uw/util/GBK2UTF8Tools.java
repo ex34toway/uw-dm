@@ -151,11 +151,5 @@ public class GBK2UTF8Tools {
 		new GBK2UTF8Tools("D:/work_ngn/MyWeixin/src", "gbk", "utf-8", "java", false);
 	}
 
-	public static void saveRemoteFile(String remoteUrl, String serverFile) throws Exception {
-		InputStream is = null;
-
-		BufferedInputStream bis = new BufferedInputStream(is);
-
-	}
 
 }

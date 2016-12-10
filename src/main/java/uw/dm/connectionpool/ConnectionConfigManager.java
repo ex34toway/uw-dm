@@ -116,7 +116,7 @@ public class ConnectionConfigManager {
 			dbMap.put(db, conf);
 		}
 		// 获得系统连接池配置
-		if (1 == 1) {// 获得变量域保护
+		if (true) {// 获得变量域保护
 			// 获得dbType
 			String dbType = config.getString("poolList.poolSys.dbType");
 			ConnectionConfig dbconf = dbMap.get(dbType);

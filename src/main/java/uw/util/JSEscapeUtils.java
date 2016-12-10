@@ -1,8 +1,5 @@
 package uw.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 模拟javascript的Escape工具。
  * 
@@ -11,8 +8,6 @@ import org.slf4j.LoggerFactory;
  */
 public class JSEscapeUtils {
 	
-	private static final Logger logger = LoggerFactory.getLogger(JSEscapeUtils.class);
-
 
 	public static String escape(String src) {
 		int i;

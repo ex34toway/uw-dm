@@ -1,8 +1,5 @@
 package uw.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * byte数组和hex转换的工具类。
  * 
@@ -11,7 +8,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ByteHexUtils {
 
-	private static final Logger logger = LoggerFactory.getLogger(ByteHexUtils.class);
 
 	/**
 	 * @param args
