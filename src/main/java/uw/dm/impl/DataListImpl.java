@@ -27,7 +27,7 @@ public class DataListImpl<T> implements DataList<T> {
 	/**
 	 * 当前索引
 	 */
-	private int currentIndex = -1;
+	private transient int currentIndex = -1;
 	/**
 	 * 整个表数据量大小
 	 */
