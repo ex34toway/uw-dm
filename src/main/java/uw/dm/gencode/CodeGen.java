@@ -54,7 +54,7 @@ public class CodeGen {
 	public static void main(String[] args) throws Exception {
 		CodeGen.PACKAGE_NAME="zwy.servicenter.entity";
 		CodeGen.SOURCECODE_PATH="D:/work_leleku/servicenter/src/main/java";
-		CodeGen.TABLE_LIST = "dm_stats_20161208";
+		CodeGen.TABLE_LIST = "msc_user";
 		
 		logger.info("开始代码生成...");
 		logger.info("CONN_NAME={}", CONN_NAME);
