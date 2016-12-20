@@ -19,7 +19,7 @@ import uw.dm.annotation.TableMeta;
  * @version $Revision: 1.00 $ $Date: ${date?string("yyyy-MM-dd HH:mm:ss")}
  */
 @TableMeta(tableName="${tableMeta.tableName}",tableType="${tableMeta.tableType}")
-@ApiModel(value = "${tableMeta.tableName}", description = "${tableMeta.tableName}")
+@ApiModel(value = "${tableMeta.tableName}的实体类", description = "${tableMeta.tableName}的实体类")
 public class ${tableMeta.entityName?cap_first} implements DataEntity,Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -29,8 +29,8 @@ public class ${tableMeta.entityName?cap_first} implements DataEntity,Serializabl
 	/**
 	 * ${column.remarks}
 	 */
-	@ColumnMeta(columnName="${column.columnName}",dataType="${column.propertyType}"<#if column.columnSize gt 0>,dataSize=${column.columnSize}</#if>,nullable=${column.isNullable}<#if column.isPrimaryKey??>,primaryKey=true</#if><#if column.isAutoIncrement??>,autoIncrement=true</#if>)
-	@ApiModelProperty(value = "${column.remarks}",dataType="${column.propertyType})
+	@ColumnMeta(columnName="${column.columnName}", dataType="${column.propertyType}"<#if column.columnSize gt 0>, dataSize=${column.columnSize}</#if>, nullable=${column.isNullable}<#if column.isPrimaryKey??>, primaryKey=true</#if><#if column.isAutoIncrement??>, autoIncrement=true</#if>)
+	@ApiModelProperty(value = "${column.remarks}", dataType="${column.propertyType}")
 	private ${column.propertyType} ${column.propertyName};
 </#list>
 
