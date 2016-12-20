@@ -30,7 +30,7 @@ public class ${tableMeta.entityName?cap_first} implements DataEntity,Serializabl
 	 * ${column.remarks}
 	 */
 	@ColumnMeta(columnName="${column.columnName}",dataType="${column.propertyType}"<#if column.columnSize gt 0>,dataSize=${column.columnSize}</#if>,nullable=${column.isNullable}<#if column.isPrimaryKey??>,primaryKey=true</#if><#if column.isAutoIncrement??>,autoIncrement=true</#if>)
-	@ApiModelProperty(value = "${column.remarks}",dataType="${column.propertyType})
+	@ApiModelProperty(value = "${column.remarks}",dataType="${column.propertyType}")
 	private ${column.propertyType} ${column.propertyName};
 </#list>
 
