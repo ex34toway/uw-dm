@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,18 +156,12 @@ public class EntityCommandImpl {
 		StringBuilder sb = new StringBuilder();
 		List<FieldMetaInfo> pks = emi.getPklist();
 		sb.append("select * from ").append(tableName).append(" where ");
-		if (pks.size()>0){
+		if (pks.size() > 0) {
 			FieldMetaInfo fmi = pks.get(1);
 			sb.append(fmi.getColumnName()).append("=? ");
 		}
 
 		T entity = null;
-
-		try {
-			entity = cls.newInstance();
-		} catch (Exception e) {
-			throw new TransactionException("Entity[" + cls.getName() + "] can not instance! ", e);
-		}
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -184,7 +179,8 @@ public class EntityCommandImpl {
 				cols[k] = rsm.getColumnLabel(k + 1).toLowerCase();
 			}
 
-			while (rs.next()) {
+			if (rs.next()) {
+				entity = cls.newInstance();
 				for (String col : cols) {
 					FieldMetaInfo fmi = emi.getFieldMetaInfo(col);
 					if (fmi != null) {
@@ -237,12 +233,6 @@ public class EntityCommandImpl {
 		T entity = null;
 
 		try {
-			entity = cls.newInstance();
-		} catch (Exception e) {
-			throw new TransactionException("Entity[" + cls.getName() + "] can not instance! ", e);
-		}
-
-		try {
 			con = dao.getTransactionController().getConnection(connName);
 			pstmt = con.prepareStatement(selectsql);
 			int i = 0;
@@ -262,7 +252,8 @@ public class EntityCommandImpl {
 				cols[k] = rsm.getColumnLabel(k + 1).toLowerCase();
 			}
 
-			while (rs.next()) {
+			if (rs.next()) {
+				entity = cls.newInstance();
 				for (String col : cols) {
 					FieldMetaInfo fmi = emi.getFieldMetaInfo(col);
 					if (fmi != null) {
@@ -272,7 +263,6 @@ public class EntityCommandImpl {
 			}
 		} catch (Exception e) {
 			exception = e.toString();
-
 			throw new TransactionException("TransactionException in EntityCommandImpl.listSingle()", e);
 		} finally {
 			if (pstmt != null) {
