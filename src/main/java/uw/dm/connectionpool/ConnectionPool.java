@@ -262,7 +262,7 @@ public class ConnectionPool {
 	 * @param i
 	 * @throws SQLException
 	 */
-	synchronized void createConn(String reason) {
+	void createConn(String reason) {
 		if (connList.size() < maxConns) {
 			try {
 				Class.forName(dbDriver);
@@ -274,7 +274,7 @@ public class ConnectionPool {
 				logger.debug("ConnectionPool[" + poolName + "] Current connection size:" + connList.size()
 						+ ", opening connection : " + cw.toString() + " " + reason);
 			} catch (Exception e) {
-				logger.debug("ConnectionPool[" + poolName + "] Attempt failed to create new connection ", e);
+				logger.error("--->ConnectionPool[" + poolName + "] Attempt failed to create new connection "+reason, e);
 			}
 		}
 	}
