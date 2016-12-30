@@ -262,7 +262,7 @@ public class ConnectionPool {
 	 * @param i
 	 * @throws SQLException
 	 */
-	synchronized void createConn(String reason) {
+	void createConn(String reason) {
 		if (connList.size() < maxConns) {
 			try {
 				Class.forName(dbDriver);
