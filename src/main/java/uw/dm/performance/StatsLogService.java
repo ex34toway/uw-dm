@@ -129,6 +129,11 @@ public class StatsLogService {
 			task.writeStats(ses);
 		}
 	}
+	
+	public static void logStats(String connName, String sql, String param, long time, String exception) {
+		SqlExecuteStats ses = new SqlExecuteStats(connName, sql, param, time, exception);
+		StatsLogService.logStats(ses);
+	}
 
 	public static void main(String[] args) throws TransactionException {
 
