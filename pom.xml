@@ -4,7 +4,7 @@
 	<packaging>jar</packaging>
 	<groupId>com.umtone</groupId>
 	<artifactId>uw-dm</artifactId>
-	<version>3.0.6</version>
+	<version>3.0.7</version>
 	<name>uw-dm</name>
 	<description>uw-dm is a simple and easy to used dao lib in JAVA</description>
 	<url>https://github.com/axeon/uw-dm</url>
@@ -73,6 +73,19 @@
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 			<version>2.3.20</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.2</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

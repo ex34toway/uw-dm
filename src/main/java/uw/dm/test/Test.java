@@ -1,38 +1,27 @@
 package uw.dm.test;
 
-import uw.dm.DAOFactory;
-import uw.dm.DataList;
-import uw.dm.TransactionException;
-import uw.dm.entity.MscPerm;
-import uw.dm.performance.StatsLogService;
-
 public class Test {
 
-	public static void main(String[] args) throws TransactionException {
-		StatsLogService.start();
-		DAOFactory dao = DAOFactory.getInstance();
-		MscPerm mp = dao.load(MscPerm.class, 150);
-		System.out.println(mp);
-		mp.setModifyDate(new java.util.Date());
-		dao.save("test", mp);
-		System.out.println(mp);
+	public static boolean sqlValidate(String str) {
+        str = str.toLowerCase();//统一转为小写
+        if(str.indexOf("script")!=-1){
+        	return true;
+        }
+        String badStr = "exec|execute|insert|select|delete|update|drop|mid|master|truncate|xmltype|upper|" +
+                "char|chr(|declare|--|net user|xp_|exec|execute|insert|case when| union |substr|ascii|length" +
+                "|group_concat|column_name|dbms_pipe| and |receive_message|" +
+                "information_schema.columns|table_schema|script| or |";//过滤掉的sql关键字，可以手动添加
+        String[] badStrs = badStr.split("\\|");
+        for (int i = 0; i < badStrs.length; i++) {
+            if (badStrs[i].length()>0&&str.indexOf(badStrs[i])!=-1) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		// mp.setId(1000);
-		// mp.setModifyDate(new java.util.Date());
-		// dao.save(mp);
-		 DataList<MscPerm> list = dao.list(MscPerm.class, "select * from msc_perm");
-		// dao.list(MscPerm.class, "select * from msc_perm");
-		// dao.list(MscPerm.class, "select * from msc_perm");
-		dao.list(MscPerm.class, "select * from msc_perm");
-		for (MscPerm mp1 : list) {
-			System.out.println(mp1);
-		}
-		// try {
-		// Thread.sleep(1000000);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-
+	public static void main(String[] args) {
+		System.out.println(sqlValidate("and d.sale_price<=1/**/OR/**/NOT/**/4015=8705 )")); 
 	}
 
 }

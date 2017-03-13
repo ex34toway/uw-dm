@@ -52,10 +52,7 @@ public class CodeGen {
 	public static String TABLE_LIST = "";
 
 	public static void main(String[] args) throws Exception {
-		CodeGen.PACKAGE_NAME="zwy.servicenter.entity";
-		CodeGen.SOURCECODE_PATH="D:/work_leleku/servicenter/src/main/java";
-		CodeGen.TABLE_LIST = "msc_user";
-		
+		DataMetaUtils.setConnName(CONN_NAME);
 		logger.info("开始代码生成...");
 		logger.info("CONN_NAME={}", CONN_NAME);
 		logger.info("SOURCECODE_PATH={}", SOURCECODE_PATH);
