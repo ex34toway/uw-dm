@@ -63,40 +63,45 @@
 			<!-- 数据库类型，当前仅允许mysql/oracle -->
 			<dbType>mysql</dbType>
 			<!-- 服务器连接地址 -->
-			<server>jdbc:mysql://127.0.0.1:3306/ngn?characterEncoding=utf-8&amp;useSSL=false</server>
+			<server>jdbc:mysql://192.168.88.88:3306/pms?characterEncoding=utf-8&amp;useSSL=false</server>
 			<!-- 登录用户名 -->
 			<username>root</username>
 			<!-- 登录密码 -->
-			<password>umtone888</password>
+			<password></password>
 			<!-- 最小连接数 -->
 			<minConns>1</minConns>
 			<!-- 最大连接数 -->
 			<maxConns>10</maxConns>
 		</poolSys>
 		<!-- 连接池名，排在第一个的pool会当做默认的pool-->
-		<pool name="test">
+		<pool name="zentao">
 			<!-- 数据库类型，当前仅允许mysql/oracle -->
 			<dbType>mysql</dbType>
 			<!-- 服务器连接地址 -->
-			<server>jdbc:mysql://127.0.0.1:3306/ngn?characterEncoding=utf-8&amp;useSSL=false</server>
+			<server>jdbc:mysql://192.168.88.88:3306/zentao?characterEncoding=utf-8&amp;useSSL=false</server>
 			<!-- 登录用户名 -->
 			<username>root</username>
 			<!-- 登录密码 -->
-			<password>umtone888</password>
+			<password></password>
+			<!-- 最小连接数 -->
+			<minConns>3</minConns>
+			<!-- 最大连接数 -->
+			<maxConns>10</maxConns>
+		</pool>
+		<pool name="pms">
+			<!-- 数据库类型，当前仅允许mysql/oracle -->
+			<dbType>mysql</dbType>
+			<!-- 服务器连接地址 -->
+			<server>jdbc:mysql://192.168.88.88:3306/pms?characterEncoding=utf-8&amp;useSSL=false</server>
+			<!-- 登录用户名 -->
+			<username>root</username>
+			<!-- 登录密码 -->
+			<password></password>
 			<!-- 最小连接数 -->
 			<minConns>3</minConns>
 			<!-- 最大连接数 -->
 			<maxConns>10</maxConns>
 		</pool>
 	</poolList>
-
-	<!-- 连接池组，通过连接池组可以实现集群访问 
-		通过连接池组，可以支持类似master/slave模式。
-		通过连接池组，可以将流量分布到多个slave上。
-	-->
-	<poolGroup>
-		<!-- name等同于连接池名，algorithm相当于轮询算法，当前支持cycle,random，默认cycle。 -->
-		<!-- group内为连接池名列表，使用";"分割 -->		
-		<group name="mysql" algorithm="cycle">tetra</group>
-	</poolGroup>
+	
 </config>

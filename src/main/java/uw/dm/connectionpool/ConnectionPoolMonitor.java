@@ -28,7 +28,6 @@ class ConnectionPoolMonitor {
 	 */
 	private static ConnCheckThread checkThread = null;
 
-
 	/**
 	 * 开始服务
 	 */
@@ -108,8 +107,11 @@ class ConnectionPoolMonitor {
 						}
 						// 处理各种超时类的问题
 						if (age > pool.connMaxAge) {// 超过最大寿命
-							logger.debug(" ***** ConnectionPool[" + pool.poolName + "] Recycling connection "
-									+ String.valueOf(cw) + " by over connection max age!");
+							if (logger.isInfoEnabled()) {
+								logger.info(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+										+ ") Recycling connection " + String.valueOf(cw)
+										+ " by over connection max age!");
+							}
 							if (cw.trySetTestStatus()) {
 								pool.connList.remove(cw);
 								cw.setUnuseStatus();
@@ -118,10 +120,13 @@ class ConnectionPoolMonitor {
 							cw = null;
 						} else if (busyTimeout > pool.connBusyTimeout) {// busy
 							// timeout超时
-							logger.error("!!!!! ConnectionPool[" + pool.poolName + "] Connection " + String.valueOf(cw)
-									+ " locked detected!\n", cw.ex);
-							logger.debug(" ***** ConnectionPool[" + pool.poolName + "] Recycling connection "
-									+ String.valueOf(cw) + " by over connection busy timout!");
+							logger.error("!!!!! ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+									+ ") Connection " + String.valueOf(cw) + " locked detected!\n", cw.ex);
+							if (logger.isInfoEnabled()) {
+								logger.info(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+										+ ") Recycling connection " + String.valueOf(cw)
+										+ " by over connection busy timout!");
+							}
 							if (cw.trySetTestStatus()) {
 								pool.connList.remove(cw);
 								cw.setUnuseStatus();
@@ -129,8 +134,11 @@ class ConnectionPoolMonitor {
 							}
 							cw = null;
 						} else if (idleTimeout > pool.connIdleTimeout) {// idle超时
-							logger.debug(" ***** ConnectionPool[" + pool.poolName + "] Recycling connection "
-									+ String.valueOf(cw) + " by over connection idle timout!");
+							if (logger.isInfoEnabled()) {
+								logger.info(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+										+ ") Recycling connection " + String.valueOf(cw)
+										+ " by over connection idle timout!");
+							}
 							if (cw.trySetTestStatus()) {
 								pool.connList.remove(cw);
 								cw.setUnuseStatus();
@@ -139,8 +147,11 @@ class ConnectionPoolMonitor {
 							cw = null;
 						} else if (((double) idleConnCount / (double) pool.connList.size()) > 0.5d
 								&& (pool.keepMinConn && pool.connList.size() > pool.minConns)) {// 每次检查，空闲数量不能超过50%，超过部分就要考虑关掉。
-							logger.debug(" ***** ConnectionPool[" + pool.poolName + "] Recycling connection "
-									+ String.valueOf(cw) + " by idle count percent over 50%!");
+							if (logger.isInfoEnabled()) {
+								logger.info(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+										+ ") Recycling connection " + String.valueOf(cw)
+										+ " by idle count percent over 50%!");
+							}
 							if (cw.trySetTestStatus()) {
 								pool.connList.remove(cw);
 								cw.setUnuseStatus();
@@ -157,8 +168,9 @@ class ConnectionPoolMonitor {
 									// 清除sql warning
 									SQLWarning currSQLWarning = cw.getWarnings();
 									if (currSQLWarning != null) {
-										logger.warn("ConnectionPool[" + pool.poolName + "] Warnings on connection "
-												+ String.valueOf(i) + " " + currSQLWarning);
+										logger.warn("ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+												+ ") Warnings on connection " + String.valueOf(i) + " "
+												+ currSQLWarning);
 										cw.clearWarnings();
 									}
 									// 检测conn是否可用
@@ -167,8 +179,8 @@ class ConnectionPoolMonitor {
 										stmt.execute(pool.testSQL);
 									cw.setTestSuccessStatus();
 								} catch (SQLException e) {
-									logger.error(" ***** ConnectionPool[" + pool.poolName + "] Recycling connection "
-											+ String.valueOf(cw) + e.getMessage());
+									logger.error(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+											+ ") Recycling connection " + String.valueOf(cw) + e.getMessage());
 									pool.connList.remove(cw);
 									cw.setUnuseStatus();
 									cw.trueClose();// 真正的关闭掉连接

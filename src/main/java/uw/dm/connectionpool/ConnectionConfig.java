@@ -13,11 +13,6 @@ public class ConnectionConfig {
 	private String name;
 
 	/**
-	 * 连接池别名，支持使用","分割来实现多个别名
-	 */
-	private String[] aliasName;
-
-	/**
 	 * 数据库类型
 	 */
 	private String dbType;
@@ -78,14 +73,6 @@ public class ConnectionConfig {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String[] getAliasName() {
-		return aliasName;
-	}
-
-	public void setAliasName(String[] aliasName) {
-		this.aliasName = aliasName;
 	}
 
 	public String getDbType() {

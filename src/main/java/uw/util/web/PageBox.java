@@ -17,11 +17,6 @@ import javax.servlet.jsp.JspWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
-
-import uw.util.Cryptography;
-
 /**
  * 把Page当成一个Box，通过这个类可以获取和Box相关的进出信息。
  * 
@@ -1129,61 +1124,5 @@ public class PageBox {
 		} else {
 			return forwardip;
 		}
-	}
-
-	/**
-	 * 适用于list界面下查询后对某一条目进行CRUD操作，操作完成后无法返回到原查询界面。
-	 * 若暂时不需要跳转可继续调用此方法
-	 * @param previousUrl
-	 *            原来url链接，比如以‘修改’、‘删除’等字眼的链接
-	 * @return
-	 */
-	public String keepStateBeforeLinkBegin(String previousUrl) {
-		String ret = "";
-		ret = genAllParamString();
-		if (ret.indexOf("referenceUrl") != -1) {// 处于中转状态时，已经从前一页面等到初始状态参数值
-			if (previousUrl.indexOf('?') != -1) {
-				ret = previousUrl + "&" + ret;
-			} else {
-				ret = previousUrl + "?" + ret;
-			}
-			return ret;
-		}
-		try {
-			ret = Cryptography.boxBase64(Base64.encode(ret.getBytes("UTF-8")));
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage());
-		}
-		if (previousUrl.indexOf('?') != -1) {
-			ret = previousUrl + "&referenceUrl=" + ret;
-		} else {
-			ret = previousUrl + "?referenceUrl=" + ret;
-		}
-		return ret;
-	}
-
-	/**
-	 * 当‘添加’、‘修改’、‘删除’等操作完成后需要使用此方法封装来跳回到原来的页面
-	 * 
-	 * @param jumpBackLink
-	 *            操作完成后，需要回到最初的list页的url
-	 * @return
-	 */
-	public String keepStateBeforeLinkEnd(String jumpBackLink) {
-		String ret = jumpBackLink;
-		String param = getParam("referenceUrl", "");
-		try {
-			param = new String(Base64.decode(Cryptography.unboxBase64(param)), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getLocalizedMessage());
-		} catch (Base64DecodingException e) {
-			logger.error(e.getLocalizedMessage());
-		}
-		if (ret.indexOf('?') != -1 && !"".equals(param)) {
-			ret = ret+"&" + param;
-		} else if (!"".equals(param)) {
-			ret = ret+"?" + param;
-		}
-		return ret;
 	}
 }

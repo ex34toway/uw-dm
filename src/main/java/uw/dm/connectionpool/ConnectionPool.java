@@ -191,16 +191,16 @@ public class ConnectionPool {
 	 */
 	public synchronized void start() {
 		this.available = true;
-		if (logger.isDebugEnabled()) {
-			logger.debug("Starting ConnectionPool[" + poolName + "]:");
-			logger.debug("dbDriver = " + dbDriver);
-			logger.debug("dbServer = " + dbServer);
-			logger.debug("dbLogin = " + dbUsername);
-			logger.debug("minConnections = " + minConns);
-			logger.debug("maxConnections = " + maxConns);
-			logger.debug("connIdleTimeout = " + connIdleTimeout / 1000 + " seconds");
-			logger.debug("connBusyTimeout = " + connBusyTimeout / 1000 + " seconds");
-			logger.debug("connMaxAge = " + connMaxAge / 1000 + " seconds");
+		if (logger.isInfoEnabled()) {
+			logger.info("Starting ConnectionPool[" + poolName + "]:");
+			logger.info("dbDriver = " + dbDriver);
+			logger.info("dbServer = " + dbServer);
+			logger.info("dbLogin = " + dbUsername);
+			logger.info("minConnections = " + minConns);
+			logger.info("maxConnections = " + maxConns);
+			logger.info("connIdleTimeout = " + connIdleTimeout / 1000 + " seconds");
+			logger.info("connBusyTimeout = " + connBusyTimeout / 1000 + " seconds");
+			logger.info("connMaxAge = " + connMaxAge / 1000 + " seconds");
 		}
 	}
 
@@ -271,10 +271,13 @@ public class ConnectionPool {
 						DriverManager.getConnection(dbServer, dbUsername, dbPassword), dbType, poolName);
 				cw.setReadyStatus();
 				connList.add(cw);
-				logger.debug("ConnectionPool[" + poolName + "] Current connection size:" + connList.size()
-						+ ", opening connection : " + cw.toString() + " " + reason);
+				if (logger.isDebugEnabled()) {
+					logger.debug("ConnectionPool[" + poolName + "](" + connList.size() + ") opening connection : "
+							+ cw.toString() + " " + reason);
+				}
 			} catch (Exception e) {
-				logger.error("--->ConnectionPool[" + poolName + "] Attempt failed to create new connection "+reason, e);
+				logger.error("--->ConnectionPool[" + poolName + "](" + connList.size()
+						+ ") Attempt failed to create new connection " + reason, e);
 			}
 		}
 	}

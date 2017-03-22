@@ -25,11 +25,6 @@ public class ConnectionConfigManager {
 	private static HashMap<String, ConnectionConfig> poolMap = new HashMap<String, ConnectionConfig>();
 
 	/**
-	 * 连接池组配置
-	 */
-	private static HashMap<String, ConnectionConfigGroup> groupMap = new HashMap<String, ConnectionConfigGroup>();
-
-	/**
 	 * 系统连接池配置。
 	 */
 	private static ConnectionConfig sysConfig = new ConnectionConfig();
@@ -167,7 +162,6 @@ public class ConnectionConfigManager {
 			// 设定
 			conf.setName(name);
 			conf.setDbType(dbType);
-			conf.setAliasName(config.getStringArray("poolList.pool(" + i + ").aliasName"));
 			conf.setServer(config.getString("poolList.pool(" + i + ").server"));
 			conf.setUsername(config.getString("poolList.pool(" + i + ").username"));
 			conf.setPassword(config.getString("poolList.pool(" + i + ").password"));
@@ -195,30 +189,10 @@ public class ConnectionConfigManager {
 			}
 			// 放入缓存中。
 			poolMap.put(name, conf);
-			// 处理别名
-			for (String n : conf.getAliasName()) {
-				poolMap.put(n, conf);
-			}
 		}
 		if (plist.size() > 0) {
 			POOL_DEFAULT_NAME = (String)plist.get(0);
 		}
-		// 处理组选项
-		List<Object> glist = config.getList("poolGroup.group[@name]");
-		for (int i = 0; i < glist.size(); i++) {
-			try {
-				String g = (String)glist.get(i);
-				String algorithm = config.getString("poolGroup.group(" + i + ")[@algorithm]");
-				String[] poolNames = config.getString("poolGroup.group(" + i + ")").split(";");
-				ConnectionConfigGroup ccg = new ConnectionConfigGroup();
-				ccg.setName(g);
-				ccg.setAlgorithm(algorithm);
-				ccg.setPoolNames(poolNames);
-				groupMap.put(g, ccg);
-			} catch (Exception e) {
-			}
-		}
-
 	}
 
 	public static void main(String[] args) {
@@ -236,20 +210,6 @@ public class ConnectionConfigManager {
 		return config.getList("poolList.pool[@name]");
 	}
 
-	/**
-	 * 从组中选择出一个连接池名
-	 * 
-	 * @param gourpName
-	 * @return
-	 */
-	public static String getPoolNameFromGroup(String groupName) {
-		ConnectionConfigGroup ccg = groupMap.get(groupName);
-		if (ccg == null)
-			return null;
-		// 默认直接使用roundrobin算法。
-		ccg.setPos(ccg.getPos() + 1);
-		return ccg.getPoolNames()[ccg.getPos() % ccg.getPoolNames().length];
-	}
 
 	/**
 	 * 根据连接池名称获得配置信息。

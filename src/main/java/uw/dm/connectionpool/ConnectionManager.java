@@ -6,10 +6,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 数据库连接管理器
  */
 public class ConnectionManager {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ConnectionConfigManager.class);
 
 	/**
 	 * 连接池缓存表
@@ -51,14 +56,11 @@ public class ConnectionManager {
 	 * 获得一个新连接
 	 */
 	public static Connection getConnection(String poolName) throws SQLException {
+//		long start = System.currentTimeMillis();
 		Connection con = null;
-		// 检测是否是组配置
-		String pn = ConnectionConfigManager.getPoolNameFromGroup(poolName);
-		if (pn == null)
-			pn = poolName;
-		ConnectionPool connpool = getConnectionPool(pn);
+		ConnectionPool connpool = getConnectionPool(poolName);
 		if (connpool == null) {
-			connpool = initConnectionPool(pn);
+			connpool = initConnectionPool(poolName);
 		}
 		if (connpool == null) {
 			throw new SQLException("ConnectionManager.getConnection() failed to init connectionPool[" + poolName+"]");
@@ -69,6 +71,7 @@ public class ConnectionManager {
 		{
 			throw new SQLException("ConnectionManager.getConnection() failed to obtain a connection in connectionPool[" + poolName+"]");
 		}
+//		logger.error("***连接池{}耗费时间为{}ms",poolName,(System.currentTimeMillis()-start));
 		return con;
 	}
 
@@ -122,14 +125,8 @@ public class ConnectionManager {
 		} else {
 			ConnectionConfig cc = ConnectionConfigManager.getConfig(poolName);
 			if (cc != null) {
-				String[] aliasName = cc.getAliasName();
 				cp = new ConnectionPool(cc.getName());
 				poolMap.put(poolName, cp);
-				if (aliasName != null) {
-					for (int i = 0; i < aliasName.length; i++) {
-						poolMap.put(aliasName[i], cp);
-					}
-				}
 			}
 		}
 		return cp;

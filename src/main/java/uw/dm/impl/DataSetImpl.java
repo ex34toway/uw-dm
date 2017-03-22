@@ -243,7 +243,7 @@ public class DataSetImpl implements DataSet, Serializable, Cloneable {
 	 * @return
 	 */
 	public int getInt(String colname) {
-		return (Integer)get(colname);
+		return Integer.parseInt(getString(colname));
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class DataSetImpl implements DataSet, Serializable, Cloneable {
 	 * @return
 	 */
 	public long getLong(String colname) {
-		return (Long)get(colname);
+		return Long.parseLong(getString(colname));
 	}
 
 	/**
@@ -263,7 +263,7 @@ public class DataSetImpl implements DataSet, Serializable, Cloneable {
 	 * @return
 	 */
 	public double getDouble(String colname) {
-		return  (Double)get(colname);
+		return  Double.parseDouble(getString(colname));
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class DataSetImpl implements DataSet, Serializable, Cloneable {
 	 * @return
 	 */
 	public float getFloat(String colname) {
-		return  (Float)get(colname);
+		return  Float.parseFloat(getString(colname));
 	}
 
 	/**
