@@ -34,7 +34,7 @@ public class CodeGen {
 	/**
 	 * 源代码的路径
 	 */
-	public static String SOURCECODE_PATH = "";
+	public static String SOURCECODE_PATH = "d:/test";
 
 	/**
 	 * 包名
@@ -60,7 +60,7 @@ public class CodeGen {
 		logger.info("SYSTEM_ENCODING={}", SYSTEM_ENCODING);
 		init();
 		process();
-		logger.info("代码生成完成...");
+		logger.info("代码生成完成..."); 
 	}
 
 	private static Configuration cfg;

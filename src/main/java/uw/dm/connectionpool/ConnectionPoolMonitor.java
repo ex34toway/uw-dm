@@ -107,8 +107,8 @@ class ConnectionPoolMonitor {
 						}
 						// 处理各种超时类的问题
 						if (age > pool.connMaxAge) {// 超过最大寿命
-							if (logger.isInfoEnabled()) {
-								logger.info(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+							if (logger.isTraceEnabled()) {
+								logger.trace(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
 										+ ") Recycling connection " + String.valueOf(cw)
 										+ " by over connection max age!");
 							}
@@ -122,8 +122,8 @@ class ConnectionPoolMonitor {
 							// timeout超时
 							logger.error("!!!!! ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
 									+ ") Connection " + String.valueOf(cw) + " locked detected!\n", cw.ex);
-							if (logger.isInfoEnabled()) {
-								logger.info(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+							if (logger.isTraceEnabled()) {
+								logger.trace(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
 										+ ") Recycling connection " + String.valueOf(cw)
 										+ " by over connection busy timout!");
 							}
@@ -134,8 +134,8 @@ class ConnectionPoolMonitor {
 							}
 							cw = null;
 						} else if (idleTimeout > pool.connIdleTimeout) {// idle超时
-							if (logger.isInfoEnabled()) {
-								logger.info(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+							if (logger.isTraceEnabled()) {
+								logger.trace(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
 										+ ") Recycling connection " + String.valueOf(cw)
 										+ " by over connection idle timout!");
 							}
@@ -145,10 +145,10 @@ class ConnectionPoolMonitor {
 								cw.trueClose();// 真正的关闭掉连接
 							}
 							cw = null;
-						} else if (((double) idleConnCount / (double) pool.connList.size()) > 0.5d
-								&& (pool.keepMinConn && pool.connList.size() > pool.minConns)) {// 每次检查，空闲数量不能超过50%，超过部分就要考虑关掉。
-							if (logger.isInfoEnabled()) {
-								logger.info(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
+						} else if (((float) idleConnCount / (float) pool.connList.size()) > 0.6f
+								&& ( pool.connList.size() > pool.minConns)) {// 每次检查，空闲数量不能超过60%，超过部分就要考虑关掉。
+							if (logger.isTraceEnabled()) {
+								logger.trace(" ***** ConnectionPool[" + pool.poolName + "](" + pool.connList.size()
 										+ ") Recycling connection " + String.valueOf(cw)
 										+ " by idle count percent over 50%!");
 							}

@@ -89,16 +89,6 @@ public class ConnectionPool {
 	boolean available = false;
 
 	/**
-	 * 是否支持pooling，默认打开
-	 */
-	boolean enablePool = true;
-
-	/**
-	 * 保持最小连接数
-	 */
-	boolean keepMinConn = true;
-
-	/**
 	 * 数据类型
 	 */
 	String dbType = "";
@@ -178,8 +168,7 @@ public class ConnectionPool {
 		this.connList = new CopyOnWriteArrayList<ConnectionWrapper>();
 
 		// 启动连接池
-		if (enablePool)
-			start();
+		start();
 	}
 
 	public boolean isAvailable() {
@@ -191,16 +180,16 @@ public class ConnectionPool {
 	 */
 	public synchronized void start() {
 		this.available = true;
-		if (logger.isInfoEnabled()) {
-			logger.info("Starting ConnectionPool[" + poolName + "]:");
-			logger.info("dbDriver = " + dbDriver);
-			logger.info("dbServer = " + dbServer);
-			logger.info("dbLogin = " + dbUsername);
-			logger.info("minConnections = " + minConns);
-			logger.info("maxConnections = " + maxConns);
-			logger.info("connIdleTimeout = " + connIdleTimeout / 1000 + " seconds");
-			logger.info("connBusyTimeout = " + connBusyTimeout / 1000 + " seconds");
-			logger.info("connMaxAge = " + connMaxAge / 1000 + " seconds");
+		if (logger.isTraceEnabled()) {
+			logger.trace("Starting ConnectionPool[" + poolName + "]:");
+			logger.trace("dbDriver = " + dbDriver);
+			logger.trace("dbServer = " + dbServer);
+			logger.trace("dbLogin = " + dbUsername);
+			logger.trace("minConnections = " + minConns);
+			logger.trace("maxConnections = " + maxConns);
+			logger.trace("connIdleTimeout = " + connIdleTimeout / 1000 + " seconds");
+			logger.trace("connBusyTimeout = " + connBusyTimeout / 1000 + " seconds");
+			logger.trace("connMaxAge = " + connMaxAge / 1000 + " seconds");
 		}
 	}
 
@@ -209,50 +198,42 @@ public class ConnectionPool {
 	 */
 	public Connection getConnection() {
 		Connection conn = null;
-		if (enablePool) {
-			if (available) {
-				boolean gotOne = false;
-				for (int outerloop = 0; outerloop < 200; outerloop++) {
-					for (int loop = 0; loop < connList.size(); loop++) {
-						ConnectionWrapper cw = null;
-						try {
-							// 防止get的时候刚好没有数值
-							cw = connList.get(loop);
-						} catch (Exception e) {
-						}
-						if (cw != null && cw.trySetUseStatus()) {
-							if (cw.liteCheckAlive()) {
-								conn = cw;
-								gotOne = true;
-								break;
-							}
-						}
-					}
-					if (gotOne) {
-						break;
-					} else if (outerloop > 1) {
-						createConn("by can't get a idle connection!");
-					}
+		if (available) {
+			boolean gotOne = false;
+			for (int outerloop = 0; outerloop < 200; outerloop++) {
+				for (int loop = 0; loop < connList.size(); loop++) {
+					ConnectionWrapper cw = null;
 					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
+						// 防止get的时候刚好没有数值
+						cw = connList.get(loop);
+					} catch (Exception e) {
 					}
-					// 超过30次找不到，报告连接耗尽信息
-					if (outerloop > 30)
-						logger.warn("-----> ConnectionPool[" + poolName
-								+ "] Exhausted!  Will wait and try again in loop " + outerloop);
+					if (cw != null && cw.trySetUseStatus()) {
+						if (cw.liteCheckAlive()) {
+							conn = cw;
+							gotOne = true;
+							break;
+						}
+					}
 				}
-			} else {
-				logger.warn("ConnectionPool[" + poolName + "] Unsuccessful getConnection() request during destroy()");
+				if (gotOne) {
+					break;
+				} else if (outerloop > 1) {
+					createConn("by can't get a idle connection!");
+				}
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+				}
+				// 超过30次找不到，报告连接耗尽信息
+				if (outerloop > 30)
+					logger.warn("-----> ConnectionPool[" + poolName + "] Exhausted!  Will wait and try again in loop "
+							+ outerloop);
 			}
-		} else {// 直接返回一个数据库连接
-			try {
-				Class.forName(dbDriver);
-				conn = DriverManager.getConnection(dbServer, dbUsername, dbPassword);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		} else {
+			logger.warn("ConnectionPool[" + poolName + "] Unsuccessful getConnection() request during destroy()");
 		}
+
 		return conn;
 	}
 
@@ -271,8 +252,8 @@ public class ConnectionPool {
 						DriverManager.getConnection(dbServer, dbUsername, dbPassword), dbType, poolName);
 				cw.setReadyStatus();
 				connList.add(cw);
-				if (logger.isDebugEnabled()) {
-					logger.debug("ConnectionPool[" + poolName + "](" + connList.size() + ") opening connection : "
+				if (logger.isTraceEnabled()) {
+					logger.trace("ConnectionPool[" + poolName + "](" + connList.size() + ") opening connection : "
 							+ cw.toString() + " " + reason);
 				}
 			} catch (Exception e) {

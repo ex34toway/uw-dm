@@ -1,6 +1,5 @@
 package uw.dm.connectionpool;
 
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.List;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * 连接池参数的读取类
@@ -49,11 +47,13 @@ public class ConnectionConfigManager {
 			config = new XMLConfiguration();
 			config.load(in, "UTF-8");
 		} catch (Exception e) {
-			logger.error("connectionPool.xml can't init!",e);
+			logger.error("connectionPool.xml can't init!", e);
 		} finally {
-			try {
-				in.close();
-			} catch (Exception e) {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 		// 解析global.all全局设定
@@ -84,7 +84,7 @@ public class ConnectionConfigManager {
 		HashMap<String, ConnectionConfig> dbMap = new HashMap<String, ConnectionConfig>();
 		List<Object> dblist = config.getList("global.database[@type]");
 		for (int i = 0; i < dblist.size(); i++) {
-			String db = (String)dblist.get(i);
+			String db = (String) dblist.get(i);
 			ConnectionConfig conf = new ConnectionConfig();
 			conf.setDriver(config.getString("global.database(" + i + ").driver"));
 			conf.setTestSQL(config.getString("global.database(" + i + ").testSQL"));
@@ -97,11 +97,13 @@ public class ConnectionConfigManager {
 			} catch (Exception e) {
 			}
 			try {
-				conf.setConnIdleTimeout(config.getInt("global.database(" + i + ").connIdleTimeout", global.getConnIdleTimeout()));
+				conf.setConnIdleTimeout(
+						config.getInt("global.database(" + i + ").connIdleTimeout", global.getConnIdleTimeout()));
 			} catch (Exception e) {
 			}
 			try {
-				conf.setConnBusyTimeout(config.getInt("global.database(" + i + ").connBusyTimeout", global.getConnBusyTimeout()));
+				conf.setConnBusyTimeout(
+						config.getInt("global.database(" + i + ").connBusyTimeout", global.getConnBusyTimeout()));
 			} catch (Exception e) {
 			}
 			try {
@@ -112,7 +114,7 @@ public class ConnectionConfigManager {
 		}
 		// 获得系统连接池配置
 		if (true) {// 获得变量域保护
-			// 获得dbType
+					// 获得dbType
 			String dbType = config.getString("poolList.poolSys.dbType");
 			ConnectionConfig dbconf = dbMap.get(dbType);
 			if (dbconf == null) {
@@ -135,11 +137,13 @@ public class ConnectionConfigManager {
 			} catch (Exception e) {
 			}
 			try {
-				sysConfig.setConnIdleTimeout(config.getInt("poolList.poolSys.connIdleTimeout", dbconf.getConnIdleTimeout()));
+				sysConfig.setConnIdleTimeout(
+						config.getInt("poolList.poolSys.connIdleTimeout", dbconf.getConnIdleTimeout()));
 			} catch (Exception e) {
 			}
 			try {
-				sysConfig.setConnBusyTimeout(config.getInt("poolList.poolSys.connBusyTimeout", dbconf.getConnBusyTimeout()));
+				sysConfig.setConnBusyTimeout(
+						config.getInt("poolList.poolSys.connBusyTimeout", dbconf.getConnBusyTimeout()));
 			} catch (Exception e) {
 			}
 			try {
@@ -151,7 +155,7 @@ public class ConnectionConfigManager {
 		// 循环解析连接池配置。
 		List<Object> plist = config.getList("poolList.pool[@name]");
 		for (int i = 0; i < plist.size(); i++) {
-			String name = (String)plist.get(i);
+			String name = (String) plist.get(i);
 			ConnectionConfig conf = new ConnectionConfig();
 			// 获得dbType
 			String dbType = config.getString("poolList.pool(" + i + ").dbType");
@@ -176,11 +180,13 @@ public class ConnectionConfigManager {
 			} catch (Exception e) {
 			}
 			try {
-				conf.setConnIdleTimeout(config.getInt("poolList.pool(" + i + ").connIdleTimeout", dbconf.getConnIdleTimeout()));
+				conf.setConnIdleTimeout(
+						config.getInt("poolList.pool(" + i + ").connIdleTimeout", dbconf.getConnIdleTimeout()));
 			} catch (Exception e) {
 			}
 			try {
-				conf.setConnBusyTimeout(config.getInt("poolList.pool(" + i + ").connBusyTimeout", dbconf.getConnBusyTimeout()));
+				conf.setConnBusyTimeout(
+						config.getInt("poolList.pool(" + i + ").connBusyTimeout", dbconf.getConnBusyTimeout()));
 			} catch (Exception e) {
 			}
 			try {
@@ -191,14 +197,14 @@ public class ConnectionConfigManager {
 			poolMap.put(name, conf);
 		}
 		if (plist.size() > 0) {
-			POOL_DEFAULT_NAME = (String)plist.get(0);
+			POOL_DEFAULT_NAME = (String) plist.get(0);
 		}
 	}
 
 	public static void main(String[] args) {
-//		for (int i = 0; i < 10; i++) {
-//			System.out.println(getPoolNameFromGroup("mysqlDB"));
-//		}
+		// for (int i = 0; i < 10; i++) {
+		// System.out.println(getPoolNameFromGroup("mysqlDB"));
+		// }
 	}
 
 	/**
@@ -209,7 +215,6 @@ public class ConnectionConfigManager {
 	public static List<Object> getPoolNames() {
 		return config.getList("poolList.pool[@name]");
 	}
-
 
 	/**
 	 * 根据连接池名称获得配置信息。

@@ -31,7 +31,11 @@ public class ${tableMeta.entityName?cap_first} implements DataEntity,Serializabl
 	 */
 	@ColumnMeta(columnName="${column.columnName}", dataType="${column.propertyType}"<#if column.columnSize gt 0>, dataSize=${column.columnSize}</#if>, nullable=${column.isNullable}<#if column.isPrimaryKey??>, primaryKey=true</#if><#if column.isAutoIncrement??>, autoIncrement=true</#if>)
 	@ApiModelProperty(value = "${column.remarks}", dataType="${column.propertyType}")
+	<#if column.propertyType == "int"||column.propertyType == "long"||column.propertyType == "double"||column.propertyType == "float"||column.propertyType == "short"||column.propertyType == "byte">
+	private ${column.propertyType} ${column.propertyName} = -1;
+	<#else>
 	private ${column.propertyType} ${column.propertyName};
+	</#if>	
 </#list>
 
 	/*
@@ -87,6 +91,7 @@ public class ${tableMeta.entityName?cap_first} implements DataEntity,Serializabl
 	 * 设置${column.remarks}。
 	 */
 	public void set${column.propertyName?cap_first}(${column.propertyType} ${column.propertyName}){
+		
 		if ((!String.valueOf(this.${column.propertyName}).equals(String.valueOf(${column.propertyName})))) {
 			if (this._UPDATED_COLUMN == null) {
 				_INIT_UPDATE_INFO();

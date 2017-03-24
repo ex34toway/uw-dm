@@ -6,16 +6,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 数据库连接管理器
  */
 public class ConnectionManager {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ConnectionConfigManager.class);
-
 	/**
 	 * 连接池缓存表
 	 */
