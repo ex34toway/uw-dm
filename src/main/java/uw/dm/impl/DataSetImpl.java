@@ -243,7 +243,11 @@ public class DataSetImpl implements DataSet, Serializable, Cloneable {
 	 * @return
 	 */
 	public int getInt(String colname) {
-		return Integer.parseInt(getString(colname));
+		Object data = get(colname);
+		if (data==null)
+			return 0;
+		else
+			return Integer.parseInt(String.valueOf(data));
 	}
 
 	/**
@@ -253,7 +257,11 @@ public class DataSetImpl implements DataSet, Serializable, Cloneable {
 	 * @return
 	 */
 	public long getLong(String colname) {
-		return Long.parseLong(getString(colname));
+		Object data = get(colname);
+		if (data==null)
+			return 0;
+		else
+			return Long.parseLong(String.valueOf(data));
 	}
 
 	/**
@@ -263,7 +271,11 @@ public class DataSetImpl implements DataSet, Serializable, Cloneable {
 	 * @return
 	 */
 	public double getDouble(String colname) {
-		return  Double.parseDouble(getString(colname));
+		Object data = get(colname);
+		if (data==null)
+			return 0;
+		else
+			return Double.parseDouble(String.valueOf(data));
 	}
 
 	/**
@@ -273,7 +285,11 @@ public class DataSetImpl implements DataSet, Serializable, Cloneable {
 	 * @return
 	 */
 	public float getFloat(String colname) {
-		return  Float.parseFloat(getString(colname));
+		Object data = get(colname);
+		if (data==null)
+			return 0;
+		else
+			return Float.parseFloat(String.valueOf(data));
 	}
 
 	/**
@@ -283,10 +299,11 @@ public class DataSetImpl implements DataSet, Serializable, Cloneable {
 	 * @return
 	 */
 	public String getString(String colname) {
-		String s = String.valueOf(get(colname));
-		if (s.equals("null"))
-			s = "";
-		return s;
+		Object data = get(colname);
+		if (data==null)
+			return "";
+		else 
+			return String.valueOf(data);
 	}
 
 	/**

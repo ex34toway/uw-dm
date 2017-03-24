@@ -157,7 +157,7 @@ public class EntityCommandImpl {
 		List<FieldMetaInfo> pks = emi.getPklist();
 		sb.append("select * from ").append(tableName).append(" where ");
 		if (pks.size() > 0) {
-			FieldMetaInfo fmi = pks.get(1);
+			FieldMetaInfo fmi =  pks.get(0);
 			sb.append(fmi.getColumnName()).append("=? ");
 		}
 

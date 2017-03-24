@@ -403,7 +403,7 @@ public class Cryptography {
 	}
 
 	public static void main(String[] args) throws Exception {
-			System.out.println(MD5Encrypt(String.valueOf(System.currentTimeMillis())));
+			System.out.println(MD5Encrypt("PMSTATSbd8d736eb1ecbf87c9f89948fd6697d22017-03-23"));
 		
 	}
 }

@@ -271,8 +271,8 @@ public class ConnectionPool {
 						DriverManager.getConnection(dbServer, dbUsername, dbPassword), dbType, poolName);
 				cw.setReadyStatus();
 				connList.add(cw);
-				if (logger.isDebugEnabled()) {
-					logger.debug("ConnectionPool[" + poolName + "](" + connList.size() + ") opening connection : "
+				if (logger.isInfoEnabled()) {
+					logger.info("ConnectionPool[" + poolName + "](" + connList.size() + ") opening connection : "
 							+ cw.toString() + " " + reason);
 				}
 			} catch (Exception e) {
