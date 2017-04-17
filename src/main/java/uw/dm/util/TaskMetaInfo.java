@@ -10,7 +10,7 @@ import java.util.Map;
  * @author axeon
  *
  */
-public class EntityMetaInfo {
+public class TaskMetaInfo {
 	
 	/**
 	 * 表名

@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +26,7 @@ import uw.dm.connectionpool.ConnectionWrapper;
 import uw.dm.dialect.Dialect;
 import uw.dm.dialect.DialectManager;
 import uw.dm.util.DmReflectUtils;
-import uw.dm.util.EntityMetaInfo;
+import uw.dm.util.TaskMetaInfo;
 import uw.dm.util.FieldMetaInfo;
 
 /**
@@ -43,7 +42,7 @@ public class EntityCommandImpl {
 	/**
 	 * 实体信息缓存
 	 */
-	private static HashMap<String, EntityMetaInfo> entityMetaCache = new HashMap<String, EntityMetaInfo>();
+	private static HashMap<String, TaskMetaInfo> entityMetaCache = new HashMap<String, TaskMetaInfo>();
 
 	/**
 	 * 保存一个实体
@@ -56,9 +55,9 @@ public class EntityCommandImpl {
 			throws TransactionException {
 		long start = System.currentTimeMillis();
 		String exception = null;
-		EntityMetaInfo emi = loadEntityMetaInfo(entity.getClass());
+		TaskMetaInfo emi = loadEntityMetaInfo(entity.getClass());
 		if (emi == null) {
-			throw new TransactionException("EntityMetaInfo[" + entity.getClass() + "] not found! ");
+			throw new TransactionException("TaskMetaInfo[" + entity.getClass() + "] not found! ");
 		}
 		if (tableName == null || tableName.equals("")) {
 			tableName = emi.getTableName();
@@ -142,9 +141,9 @@ public class EntityCommandImpl {
 			throws TransactionException {
 		long start = System.currentTimeMillis();
 		String exception = null;
-		EntityMetaInfo emi = loadEntityMetaInfo(cls);
+		TaskMetaInfo emi = loadEntityMetaInfo(cls);
 		if (emi == null) {
-			throw new TransactionException("EntityMetaInfo[" + cls + "] not found! ");
+			throw new TransactionException("TaskMetaInfo[" + cls + "] not found! ");
 		}
 		if (tableName == null || tableName.equals("")) {
 			tableName = emi.getTableName();
@@ -226,9 +225,9 @@ public class EntityCommandImpl {
 		}
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		EntityMetaInfo emi = loadEntityMetaInfo(cls);
+		TaskMetaInfo emi = loadEntityMetaInfo(cls);
 		if (emi == null) {
-			throw new TransactionException("EntityMetaInfo[" + cls.getName() + "] not found! ");
+			throw new TransactionException("TaskMetaInfo[" + cls.getName() + "] not found! ");
 		}
 		T entity = null;
 
@@ -296,9 +295,9 @@ public class EntityCommandImpl {
 			throws TransactionException {
 		long start = System.currentTimeMillis();
 		String exception = null;
-		EntityMetaInfo emi = loadEntityMetaInfo(entity.getClass());
+		TaskMetaInfo emi = loadEntityMetaInfo(entity.getClass());
 		if (emi == null) {
-			throw new TransactionException("EntityMetaInfo[" + entity.getClass() + "] not found! ");
+			throw new TransactionException("TaskMetaInfo[" + entity.getClass() + "] not found! ");
 		}
 		if (tableName == null || tableName.equals("")) {
 			tableName = emi.getTableName();
@@ -377,9 +376,9 @@ public class EntityCommandImpl {
 			throws TransactionException {
 		long start = System.currentTimeMillis();
 		String exception = null;
-		EntityMetaInfo emi = loadEntityMetaInfo(entity.getClass());
+		TaskMetaInfo emi = loadEntityMetaInfo(entity.getClass());
 		if (emi == null) {
-			throw new TransactionException("EntityMetaInfo[" + entity.getClass() + "] not found! ");
+			throw new TransactionException("TaskMetaInfo[" + entity.getClass() + "] not found! ");
 		}
 		if (tableName == null || tableName.equals("")) {
 			tableName = emi.getTableName();
@@ -453,9 +452,9 @@ public class EntityCommandImpl {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		Object[] po = null;
-		EntityMetaInfo emi = loadEntityMetaInfo(cls);
+		TaskMetaInfo emi = loadEntityMetaInfo(cls);
 		if (emi == null) {
-			throw new TransactionException("EntityMetaInfo[" + cls.getName() + "] not found! ");
+			throw new TransactionException("TaskMetaInfo[" + cls.getName() + "] not found! ");
 		}
 
 		int allsize = 0;
@@ -535,7 +534,7 @@ public class EntityCommandImpl {
 	}
 
 	static String getTableName(Class<?> cls) {
-		EntityMetaInfo emi = loadEntityMetaInfo(cls);
+		TaskMetaInfo emi = loadEntityMetaInfo(cls);
 		if (emi != null) {
 			return emi.getTableName();
 		} else {
@@ -549,11 +548,11 @@ public class EntityCommandImpl {
 	 * @param entityCls
 	 * @return
 	 */
-	static EntityMetaInfo loadEntityMetaInfo(Class<?> entityCls) {
+	static TaskMetaInfo loadEntityMetaInfo(Class<?> entityCls) {
 
-		EntityMetaInfo emi = entityMetaCache.get(entityCls.getName());
+		TaskMetaInfo emi = entityMetaCache.get(entityCls.getName());
 		if (emi == null) {
-			emi = new EntityMetaInfo();
+			emi = new TaskMetaInfo();
 			if (entityCls.isAnnotationPresent(TableMeta.class)) {
 				TableMeta tm = entityCls.getAnnotation(TableMeta.class);
 				emi.setTableName(tm.tableName());
