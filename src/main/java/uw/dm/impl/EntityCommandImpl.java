@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +25,8 @@ import uw.dm.connectionpool.ConnectionWrapper;
 import uw.dm.dialect.Dialect;
 import uw.dm.dialect.DialectManager;
 import uw.dm.util.DmReflectUtils;
-import uw.dm.util.TaskMetaInfo;
 import uw.dm.util.FieldMetaInfo;
+import uw.dm.util.TaskMetaInfo;
 
 /**
  * 实体类命令实现。 g
@@ -67,7 +66,8 @@ public class EntityCommandImpl {
 			connName = ConnectionRouter.getMappedDatabase(tableName, "write");
 		}
 		StringBuilder sb = new StringBuilder();
-		Set<String> cols = entity.GET_UPDATED_COLUMN();
+		//写入所有的列
+		ArrayList<String> cols = new ArrayList<String>(emi.getColumnMap().keySet());
 		if (cols.size() > 0) {
 			sb.append("insert into ").append(tableName).append(" (");
 			for (String col : cols) {
@@ -307,7 +307,7 @@ public class EntityCommandImpl {
 			connName = ConnectionRouter.getMappedDatabase(tableName, "write");
 		}
 		StringBuilder sb = new StringBuilder();
-		Set<String> cols = entity.GET_UPDATED_COLUMN();
+		ArrayList<String> cols = new ArrayList<>(entity.GET_UPDATED_COLUMN());
 		List<FieldMetaInfo> pks = emi.getPklist();
 		sb.append("update ").append(tableName).append(" set ");
 		for (String col : cols) {
