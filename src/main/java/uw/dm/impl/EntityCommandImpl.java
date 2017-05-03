@@ -307,7 +307,7 @@ public class EntityCommandImpl {
 			connName = ConnectionRouter.getMappedDatabase(tableName, "write");
 		}
 		StringBuilder sb = new StringBuilder();
-		ArrayList<String> cols = new ArrayList<>(entity.GET_UPDATED_COLUMN());
+		ArrayList<String> cols = new ArrayList<String>(entity.GET_UPDATED_COLUMN());
 		List<FieldMetaInfo> pks = emi.getPklist();
 		sb.append("update ").append(tableName).append(" set ");
 		for (String col : cols) {
