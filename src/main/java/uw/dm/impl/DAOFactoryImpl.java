@@ -406,7 +406,7 @@ public class DAOFactoryImpl extends DAOFactory {
 
 	@Override
 	public <T> List<T> queryForSingleList(Class<T> cls, String sql, Object... paramList) throws TransactionException {
-		return queryForSingleList(null, sql, paramList);
+		return queryForSingleList(null, cls, sql, paramList);
 	}
 
 	@Override
