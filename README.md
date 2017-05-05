@@ -17,7 +17,7 @@ uw-dm包是一个封装数据库操作的类库，比hibernate效率高，比myb
 <dependency>
 	<groupId>com.umtone</groupId>
 	<artifactId>uw-dm</artifactId>
-	<version>3.0.8</version>
+	<version>3.0.11</version>
 </dependency>
 ```
 
