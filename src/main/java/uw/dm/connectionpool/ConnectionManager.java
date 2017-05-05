@@ -115,7 +115,7 @@ public class ConnectionManager {
 	 */
 	private static synchronized ConnectionPool initConnectionPool(String poolName) {
 		ConnectionPool connpool = getConnectionPool(poolName);
-		if (connpool!=null) {
+		if (connpool==null) {
 			ConnectionConfig cc = ConnectionConfigManager.getConfig(poolName);
 			if (cc != null) {
 				connpool = new ConnectionPool(cc.getName());

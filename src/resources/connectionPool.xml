@@ -78,21 +78,7 @@
 			<!-- 数据库类型，当前仅允许mysql/oracle -->
 			<dbType>mysql</dbType>
 			<!-- 服务器连接地址 -->
-			<server>jdbc:mysql://192.168.88.88:3306/zentao?characterEncoding=utf-8&amp;useSSL=false&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true</server>
-			<!-- 登录用户名 -->
-			<username>root</username>
-			<!-- 登录密码 -->
-			<password></password>
-			<!-- 最小连接数 -->
-			<minConns>3</minConns>
-			<!-- 最大连接数 -->
-			<maxConns>100</maxConns>
-		</pool>
-		<pool name="pms">
-			<!-- 数据库类型，当前仅允许mysql/oracle -->
-			<dbType>mysql</dbType>
-			<!-- 服务器连接地址 -->
-			<server>jdbc:mysql://192.168.88.88:3306/pms?characterEncoding=utf-8&amp;useSSL=false&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true</server>
+			<server>jdbc:mysql://192.168.88.88:3306/task?characterEncoding=utf-8&amp;useSSL=false&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true</server>
 			<!-- 登录用户名 -->
 			<username>root</username>
 			<!-- 登录密码 -->
