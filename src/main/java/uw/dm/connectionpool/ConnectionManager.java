@@ -114,17 +114,15 @@ public class ConnectionManager {
 	 * @return Connection
 	 */
 	private static synchronized ConnectionPool initConnectionPool(String poolName) {
-		ConnectionPool cp = null;
-		if (poolMap.containsKey(poolName)) {
-			cp = poolMap.get(poolName);
-		} else {
+		ConnectionPool connpool = getConnectionPool(poolName);
+		if (connpool!=null) {
 			ConnectionConfig cc = ConnectionConfigManager.getConfig(poolName);
 			if (cc != null) {
-				cp = new ConnectionPool(cc.getName());
-				poolMap.put(poolName, cp);
+				connpool = new ConnectionPool(cc.getName());
+				poolMap.put(poolName, connpool);
 			}
 		}
-		return cp;
+		return connpool;
 	}
 
 }

@@ -61,17 +61,28 @@ public class SequenceManager {
 	 */
 	public static long nextSysSequence(String tablename, int value) {
 		tablename = tablename.toLowerCase();
-		SequenceManager manager = null;
-		if (managers.containsKey(tablename)) {
-			manager = (SequenceManager) managers.get(tablename);
-		} else {
-			// 是否有效是个问题
-			synchronized (tablename) {
-				manager = new SequenceManager(tablename);
-				managers.put(tablename, manager);
-			}
+		SequenceManager manager = managers.get(tablename);
+		if (manager == null) {
+			manager = initSequenceManager(tablename);
 		}
-		return manager.nextUniqueID(value);
+		if (manager != null)
+			return manager.nextUniqueID(value);
+		else
+			return -1;
+	}
+
+	/**
+	 * 初始化SequenceManager
+	 * 
+	 * @return
+	 */
+	private synchronized static SequenceManager initSequenceManager(String tablename) {
+		SequenceManager manager = managers.get(tablename);
+		if (manager == null) {
+			manager = new SequenceManager(tablename);
+			managers.put(tablename, manager);
+		}
+		return manager;
 	}
 
 	/**
@@ -108,12 +119,11 @@ public class SequenceManager {
 	 * @param value
 	 */
 	private void getNextBlock(int value) {
-		
+
 		for (int i = 0; i < 300; i++) {
 			if (getNextBlockImpl(value))
 				break;
-			logger.error("WARNING: SequenceManager failed to obtain next ID block . Trying " + i
-					+ "...");
+			logger.error("WARNING: SequenceManager failed to obtain next ID block . Trying " + i + "...");
 			// 如果不成功，再次调用改方法。
 			try {
 				Thread.sleep(1000);
