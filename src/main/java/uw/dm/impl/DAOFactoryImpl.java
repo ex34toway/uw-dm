@@ -269,7 +269,7 @@ public class DAOFactoryImpl extends DAOFactory {
 
 	@Override
 	public <T> DataList<T> list(String connName, Class<T> cls, String selectsql) throws TransactionException {
-		return list(null, cls, selectsql, (Object[]) null, 0, 0, false);
+		return list(connName, cls, selectsql, (Object[]) null, 0, 0, false);
 
 	}
 
@@ -294,7 +294,7 @@ public class DAOFactoryImpl extends DAOFactory {
 	@Override
 	public <T> DataList<T> list(String connName, Class<T> cls, String selectsql, Object[] paramList, int startIndex,
 			int resultNum) throws TransactionException {
-		return list(null, cls, selectsql, paramList, startIndex, resultNum, false);
+		return list(connName, cls, selectsql, paramList, startIndex, resultNum, false);
 	}
 
 	@Override
